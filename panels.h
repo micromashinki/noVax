@@ -10,3 +10,13 @@ class RegPanel : public wxPanel {
 public:
 	RegPanel(Okno*);
 };
+
+class VarPanel : public wxPanel {
+public:
+	VarPanel(Okno*);
+};
+
+class MsgPanel : public wxPanel {
+public:
+	MsgPanel(Okno*);
+};
