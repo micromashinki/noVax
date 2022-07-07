@@ -140,11 +140,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Cmemory.cpp" />
     <ClCompile Include="noVAX.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Cmemory.h" />
+    <ClInclude Include="Cmemory.hpp" />
     <ClInclude Include="Cprocessor.hpp" />
   </ItemGroup>
   <ItemGroup>

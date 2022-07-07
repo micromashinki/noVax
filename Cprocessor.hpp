@@ -1,4 +1,4 @@
-#include "Cmemory.h"
+#include "Cmemory.hpp"
 #include <stdint.h>
 
 #pragma once
@@ -9,8 +9,8 @@ class Cprocessor
 public:
 	Cprocessor() {
 		//test value 
-		registr[1] = 6;
-		registr[2] = 6;
+		registr[1] = 0xF;
+		registr[2] = 7;
 
 	}
 	Cmemory memory;
