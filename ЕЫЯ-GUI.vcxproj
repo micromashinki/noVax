@@ -155,7 +155,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="panels.cpp" />
+    <ClCompile Include="panel_mem.cpp" />
+    <ClCompile Include="panel_msg.cpp" />
+    <ClCompile Include="panel_regs.cpp" />
+    <ClCompile Include="panel_vars.cpp" />
     <ClCompile Include="start.cpp" />
   </ItemGroup>
   <ItemGroup>

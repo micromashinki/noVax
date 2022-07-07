@@ -4,6 +4,7 @@
 #include <wx/menu.h>
 #include <wx/panel.h>
 #include <wx/scrolbar.h>
+#include <wx/grid.h>
 
 class InitClass : public wxApp {
 public:
