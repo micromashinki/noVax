@@ -5,6 +5,7 @@
 #include <wx/panel.h>
 #include <wx/scrolbar.h>
 #include <wx/grid.h>
+#include <wx/msgdlg.h>
 
 class InitClass : public wxApp {
 public:
