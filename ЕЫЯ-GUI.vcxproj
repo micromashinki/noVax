@@ -163,6 +163,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="panels.h" />
+    <ClInclude Include="panel_mem.h" />
+    <ClInclude Include="panel_msg.h" />
+    <ClInclude Include="panel_regs.h" />
+    <ClInclude Include="panel_vars.h" />
     <ClInclude Include="start.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

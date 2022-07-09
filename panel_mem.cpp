@@ -68,7 +68,7 @@ void MemPanel::checkValue(wxGridEvent& e) {
     wxString str = e.GetString();
     int k = e.GetRow();
     int j = e.GetCol();
-    if (str.Length() > 2) {
+    if ((str.Length() > 2) or (str.IsEmpty())) {
         invalid = true;
         e.Veto();
     }
