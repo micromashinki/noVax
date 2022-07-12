@@ -140,14 +140,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="noVAX.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Cmemory.hpp" />
-    <ClInclude Include="Cprocessor.hpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Cmemory.hpp" />
+    <ClInclude Include="src\Cprocessor.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\noVAX.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
