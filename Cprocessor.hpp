@@ -9,8 +9,8 @@ class Cprocessor
 public:
 	Cprocessor() {
 		//test value 
-		registr[1] = 0xF;
-		registr[2] = 7;
+		registr[0] = 0x9;
+		registr[1] = 0x60;
 
 	}
 	Cmemory memory;
@@ -19,42 +19,104 @@ public:
 			
 
 	template<typename Type>
-	Type get(uint32_t& index = *(registr + 15 * sizeof(registr[0]))) {
+	Type get(uint32_t& index, bool finalOperation = true) {
 		uint8_t typeAdress;
 		memory.get(index,typeAdress);
 		
 
-		auto h = typeAdress & 0x50;
+		auto h = typeAdress & 0xF0;
 		if (h == 0x50) {
-			registr[15] += 1;
+			if(finalOperation)
+				registr[15] += 1;
 			return registr[typeAdress - 0x50];
 		}
 
-		h = typeAdress & 0x60;
 		if (h == 0x60) {
-			registr[15] += 1;
+			if (finalOperation)
+				registr[15] += 1;
 			Type dat;
 			memory.get(registr[typeAdress - 0x60], dat);
 			return dat;
 		}
+
+		if (h == 0x70) {
+			Type dat;
+			if (finalOperation){
+				registr[15] += 1;
+				registr[typeAdress - 0x70] -= sizeof(Type);
+			}
+			memory.get(registr[typeAdress - 0x70], dat);
+			return dat;
+		}
+
+		if (h == 0x80) {
+			Type dat;
+			memory.get(registr[typeAdress - 0x80], dat);
+			if (finalOperation){
+				registr[15] += 1;
+				registr[typeAdress - 0x80] += sizeof(Type);
+			}
+			return dat;
+		}
+
+		if (h == 0x90) {
+			Type dat;
+			memory.get(registr[typeAdress - 0x90], dat);
+			memory.get(dat, dat);
+			if (finalOperation) {
+				registr[15] += 1;
+				registr[typeAdress - 0x90] += sizeof(Type);
+			}
+			return dat;
+		}
+
+
 		
 	}
 
 	template<typename Type>
-	void set(uint8_t index, const Type value) {
+	void set(uint8_t index, const Type value, bool finalOperation = true) {
 		uint8_t typeAdress;
 		memory.get(index, typeAdress);
 
-		auto h = typeAdress & 0x50;
+		auto h = typeAdress & 0xF0;
 		if (h == 0x50) {
-			registr[15] += 1;
+			if (finalOperation)
+				registr[15] += 1;
 			registr[typeAdress - 0x50] = value;
 		}
 
-		h = typeAdress & 0x60;
 		if (h == 0x60) {
-			registr[15] += 1;
+			if (finalOperation)
+				registr[15] += 1;
 			memory.set(registr[typeAdress - 0x60], value);
+		}
+
+		if (h == 0x70) {
+			if (finalOperation) {
+				registr[15] += 1;
+				registr[typeAdress - 0x70] -= sizeof(Type);
+			}
+			memory.set(registr[typeAdress - 0x70], value);
+		}
+
+		if (h == 0x80) {
+			memory.set(registr[typeAdress - 0x80], value);
+			if (finalOperation) {
+				registr[typeAdress - 0x80] += sizeof(Type);
+				registr[15] += 1;
+			}
+			
+		}
+
+		if (h == 0x90) {
+			Type dat;
+			memory.get(registr[typeAdress - 0x90], dat);
+			memory.set(dat, value);
+			if (finalOperation) {
+				registr[15] += 1;
+				registr[typeAdress - 0x90] += sizeof(Type);
+			}
 		}
 
 		
@@ -64,8 +126,8 @@ public:
 	template<typename Type>
 	void add2() {
 		Type op1 = get<Type>(registr[15]);
-		Type op2 = get<Type>(registr[15]);
-		set(registr[15] - 1, (Type)(op1 + op2));
+		Type op2 = get<Type>(registr[15],false);
+		set(registr[15], (Type)(op1 + op2));
 	}
 
 

@@ -22,15 +22,15 @@ public:
 	Cmemory(): mem(MAX_SIZE + 5,0) {
 
 		//test value 
-		mem[0] = 0xC0;
+		mem[0] = 0xA0;
 		mem[1] = 0x51;
-		mem[2] = 0x62;
+		mem[2] = 0x90;
 
 		//mem[6] = 4;
-		mem[7] = 0x15;
-		mem[8] = 0xFF;
-		mem[9] = 0x33;
-		mem[10] = 0x33;
+		mem[7] = 0xC0;
+		//mem[8] = 0xFF;
+		mem[9] = 0x7;
+		//mem[10] = 0x33;
 				
 	}
 
