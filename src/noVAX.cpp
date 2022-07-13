@@ -19,7 +19,7 @@ void drawProccessor(Cprocessor& processor) {
     std::cout << std::endl;
     std::cout << ' ' << ' ';
 
-    for (int row = 0; row < 4; row++) {
+    for (int row = 15; row < 30; row++) {
         for (int col = 0; col < 16; col++)
             std::cout << std::hex << (int)m[col + row * 16] << (col + row * 16 - 1 > 1 ? (int)m[col + row * 16 - 1] <= 0xF ? std::setw(5) : std::setw(5) : std::setw(5));
         std::cout << std::endl;
@@ -32,21 +32,34 @@ void drawProccessor(Cprocessor& processor) {
 int main()
 {
     Cprocessor pr;
+    uint32_t ad = 0x118;
+    pr.setMemoryCell(ad++, 0xA1);
+    pr.setMemoryCell(ad++, 0x53);
+    pr.setMemoryCell(ad++, 0x5A);
+    pr.setMemoryCell(ad++, 0x5C);
+    pr.setMemoryCell(ad++, 0xC0);
+    pr.setMemoryCell(ad++, 0x5B);
+    pr.setMemoryCell(ad++, 0x53);
+
+
+    pr.setRegisterCell(0x2, 0xB2);
+    pr.setRegisterCell(0x3, 0x2B);
+    pr.setRegisterCell(0x4, 0xF42F);
+    pr.setRegisterCell(0xA, 0x961);
+    pr.setRegisterCell(0xB, 0x8BA0A1);
+    pr.setRegisterCell(0xC, 0x57F6C1);
+    pr.setRegisterCell(0xF, 0x118);
+
+
     drawProccessor(pr);
-    pr.setMemoryCell(0, 0xB6);//inc
-    pr.setMemoryCell(1, 0x59);
     pr.step();
     drawProccessor(pr);
-
-    pr.setRegisterCell(15, 0);//PC
     pr.step();
     drawProccessor(pr);
-
     pr.setMemoryCell(2, 0xB7);
     pr.setMemoryCell(3, 0x59);
     pr.step();
     drawProccessor(pr);
-    
     
 }
 

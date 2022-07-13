@@ -2,12 +2,33 @@
 #include <stdint.h>
 
 #pragma once
+class Cflags {
+public:
+	bool C { 0 };
+	bool V{ 0 };
+	bool Z{ 0 };
+	bool N{ 0 };
 
+	template<typename Type>
+	void setFlags(Type value) {
+		if (value == 0)
+			Z = true;
+		else 
+			Z = false;
+
+		if(value < (Type)MAXDWORD64)
+			N = true;
+		else
+			N = false;
+	}
+
+};
 
 class Cprocessor
 {
+	Cflags flag;
 	Cmemory memory;
-	std::vector<uint8_t> registr;
+	std::vector<uint32_t> registr;
 
 
 	template<typename Type>
@@ -61,13 +82,10 @@ class Cprocessor
 			}
 			return dat;
 		}
-
-
-
 	}
 
 	template<typename Type>
-	void set(const uint8_t index, const Type value, bool finalOperation = true) {
+	void set(const uint32_t index, const Type value, bool finalOperation = true) {
 		uint8_t typeAdress;
 		memory.get(index, typeAdress);
 
@@ -119,6 +137,7 @@ class Cprocessor
 	void add2() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15], false);
+		flag.setFlags<Type>(op1 + op2);
 		set(registr[15], (Type)(op1 + op2));
 	}
 
@@ -126,6 +145,7 @@ class Cprocessor
 	void add3() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15]);
+		flag.setFlags(op1 + op2);
 		set(registr[15], (Type)(op1 + op2));
 	}
 
@@ -133,6 +153,7 @@ class Cprocessor
 	void sub2() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15], false);
+		flag.setFlags(op1 - op2);
 		set(registr[15], (Type)(op1 - op2));
 	}
 
@@ -140,20 +161,63 @@ class Cprocessor
 	void sub3() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15]);
+		flag.setFlags(op1 - op2);
 		set(registr[15], (Type)(op1 - op2));
 	}
 
 	template<typename Type>
 	void inc() {
 		Type op1 = get<Type>(registr[15], false);
+		flag.setFlags(op1 + 1);
 		set(registr[15], (Type)(op1 + 1));
 	}
 
 	template<typename Type>
 	void dec() {
 		Type op1 = get<Type>(registr[15], false);
+		flag.setFlags(op1 - 1);
 		set(registr[15], (Type)(op1 - 1));
 	}
+
+	template<typename Type>
+	void mco() {
+		Type op1 = get<Type>(registr[15]);
+		flag.setFlags(~op1);
+		set(registr[15], (Type)(~op1));
+	}
+
+	template<typename Type>
+	void clr() {
+		flag.setFlags(0);
+		set(registr[15], (Type)(0));
+	}
+
+	template<typename Type>
+	void bis() {
+		Type op1 = get<Type>(registr[15]);
+		Type op2 = get<Type>(registr[15], false);
+		flag.setFlags(op1 | op2);
+		set(registr[15], (Type)(op1 | op2));
+	}
+
+	template<typename Type>
+	void bic() {
+		Type op1 = get<Type>(registr[15]);
+		Type op2 = get<Type>(registr[15], false);
+		flag.setFlags(op1 & (~op2));
+		set(registr[15], (Type)(op1 & (~op2)));
+	}
+
+	template<typename Type>
+	void xor_() {
+		Type op1 = get<Type>(registr[15]);
+		Type op2 = get<Type>(registr[15], false);
+		flag.setFlags(op1 ^ op2);
+		set(registr[15], (Type)(op1 ^ op2));
+	}
+
+
+
 
 
 
@@ -165,18 +229,21 @@ public:
 		return memory.getMemory();
 	}
 
-	const std::vector<uint8_t>& getRegister() {
+	const std::vector<uint32_t>& getRegister() {
 		return registr;
 	}
 
 	void setMemoryCell(const uint32_t index, const uint8_t value) {
-		if(index <= MAX_SIZE)
+		if (index <= MAX_SIZE)
 			memory.set(index, (uint8_t)value);
 	}
 
-	void setRegisterCell(const uint32_t index, const uint8_t value) {
+	void setRegisterCell(const uint8_t index, const uint32_t value) {
 		if (index <= 16)
 			registr[index] = value;
+	}
+	const Cflags& getFlags() {
+		return flag;
 	}
 
 
@@ -247,6 +314,55 @@ public:
 			dec<uint32_t>();
 			break;
 
+		case 0x92:
+			mco<uint8_t>();
+			break;
+		case 0xB2:
+			mco<uint16_t>();
+			break;
+		case 0xD2:
+			mco<uint32_t>();
+			break;
+
+		case 0x94:
+			clr<uint8_t>();
+			break;
+		case 0xB4:
+			clr<uint16_t>();
+			break;
+		case 0xD4:
+			clr<uint32_t>();
+			break;
+
+		case 0x88:
+			bis<uint8_t>();
+			break;
+		case 0xA8:
+			bis<uint16_t>();
+			break;
+		case 0xC8:
+			bis<uint32_t>();
+			break;
+
+		case 0x8A:
+			bic<uint8_t>();
+			break;
+		case 0xAA:
+			bic<uint16_t>();
+			break;
+		case 0xCA:
+			bic<uint32_t>();
+			break;
+
+		case 0x8C:
+			xor_<uint8_t>();
+			break;
+		case 0xAC:
+			xor_<uint16_t>();
+			break;
+		case 0xCC:
+			xor_<uint32_t>();
+			break;
 
 		default:
 			break;
