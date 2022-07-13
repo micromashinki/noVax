@@ -9,6 +9,8 @@ MemPanel::MemPanel(Okno* o) : wxPanel() {
     int col = 16;
     table->CreateGrid(rows, col);
     table->SetRowLabelSize(85);
+    table->SetColLabelSize(25);
+    table->SetMargins(0, -15);
     table->SetRowLabelAlignment(wxALIGN_RIGHT, wxALIGN_CENTRE);
     table->SetLabelFont(wxFont(13, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MAX, false, "Arial"));
     table->SetLabelBackgroundColour(wxColour(44, 117, 255));
@@ -97,25 +99,34 @@ void MemPanel::checkValue(wxGridEvent& e) {
         e.Veto();
         if (str.length() == 1) { table->SetCellValue(k, j, wxString("0" + str)); }
         else table->SetCellValue(k, j, wxString(str));
+        /*int a;
+        if (k == 0) a = j;
+        else a = k*16+j;
+        setMemoryCell(a, std::stoi(str.ToStdString(), 0, 16));*/
+        setTheme(wxColour(0, 0, 0), wxColour(30, 30, 30), wxColour(102, 255, 0));
     }
 }
 
 void MemPanel::denyResizeCol(wxGridSizeEvent& e) {
     table->SetColSize(e.GetRowOrCol(), 39);
     e.Veto();
-
-    //DELETE THIS ON PRODUCTION
-    wxMessageBox("Так нельзя!\nОтсоси");
-    //DELETE THIS ON PRODUCTION
 }
 
 void MemPanel::denyResizeRow(wxGridSizeEvent& e) {
     table->SetRowSize(e.GetRowOrCol(), 25);
     e.Veto();
+}
 
-    //DELETE THIS ON PRODUCTION
-    wxMessageBox("Так нельзя!\nОтсоси");
-    //DELETE THIS ON PRODUCTION
+void MemPanel::setTheme(const wxColour& label, const wxColour& cell, const wxColour& grid, const wxColour& text) {
+    table->SetLabelBackgroundColour(label);
+    table->SetLabelTextColour(text);
+    for (int i = 0; i < table->GetNumberRows(); i++) {
+        for (int j = 0; j < table->GetNumberCols(); j++) {
+            table->SetCellBackgroundColour(i, j, cell);
+            table->SetCellTextColour(i, j, grid);
+        }
+    }
+    table->SetGridLineColour(grid);
 }
 
 wxBEGIN_EVENT_TABLE(MemPanel, wxPanel)

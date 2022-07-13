@@ -7,6 +7,8 @@ public:
 	void checkValue(wxGridEvent&);
 	void denyResizeCol(wxGridSizeEvent&);
 	void denyResizeRow(wxGridSizeEvent&);
+	void setTheme(const wxColour&, const wxColour&, const wxColour&, const wxColour& text = wxColour(102, 255, 0));
+
 private:
 	wxSize size;
 	wxGrid* table;
