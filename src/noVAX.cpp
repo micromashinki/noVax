@@ -4,6 +4,8 @@
 #include "Cprocessor.hpp"
 
 void drawProccessor(Cprocessor& processor) {
+    auto g = processor.getStepDescription();
+    std::cout << g.description<<std::endl;
     auto r = processor.getRegister();
     for (int i = 0; i < 16; i++)
         std::cout << "R" << std::hex << i << std::setw(1) << "=" << std::setw(1) << std::hex <<(int)r[i]<< std::setw(3);
@@ -36,7 +38,7 @@ int main()
     pr.setMemoryCell(ad++, 0xA1);
     pr.setMemoryCell(ad++, 0x53);
     pr.setMemoryCell(ad++, 0x5A);
-    pr.setMemoryCell(ad++, 0x5C);
+    pr.setMemoryCell(ad++, 0x6C);
     pr.setMemoryCell(ad++, 0xC0);
     pr.setMemoryCell(ad++, 0x5B);
     pr.setMemoryCell(ad++, 0x53);
@@ -47,7 +49,7 @@ int main()
     pr.setRegisterCell(0x4, 0xF42F);
     pr.setRegisterCell(0xA, 0x961);
     pr.setRegisterCell(0xB, 0x8BA0A1);
-    pr.setRegisterCell(0xC, 0x57F6C1);
+    pr.setRegisterCell(0xC, 0x33);
     pr.setRegisterCell(0xF, 0x118);
 
 
