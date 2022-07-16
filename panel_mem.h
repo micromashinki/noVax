@@ -1,7 +1,9 @@
 #pragma once
 class MemPanel : public wxPanel {
 public:
-	MemPanel(Okno*);
+	MemPanel(const wxSize&);
+	void setSurface();
+
 	int GetWidth();
 	int GetHeight();
 	void checkValue(wxGridEvent&);
@@ -11,6 +13,6 @@ public:
 
 private:
 	wxSize size;
-	wxGrid* table;
+	wxGrid* table = NULL;
 	wxDECLARE_EVENT_TABLE();
 };

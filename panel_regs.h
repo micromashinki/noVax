@@ -1,7 +1,9 @@
 #pragma once
 class RegPanel : public wxPanel {
 public:
-	RegPanel(Okno*);
+	RegPanel(const wxSize&);
+	void setSurface();
+
 	int GetWidth();
 	int GetHeight();
 	void checkValue(wxGridEvent&);
@@ -10,6 +12,6 @@ public:
 	void setTheme(const wxColour&, const wxColour&, const wxColour&, const wxColour& text = wxColour(102, 255, 0));
 private:
 	wxSize size;
-	wxGrid* first_col;
-	wxGrid* sec_col;
+	wxGrid* first_col = NULL;
+	wxGrid* sec_col = NULL;
 };

@@ -1,12 +1,11 @@
 #include "panels.h"
 
-MemPanel::MemPanel(Okno* o) : wxPanel() {
-    size = wxSize(o->GetWidth() / 1.5, o->GetHeight() - 250);
-    wxFont* font = new wxFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Courier New");
-    Create(o, wxID_ANY, wxPoint(0, 0), size);
-    table = new wxGrid(this, wxID_ANY, wxPoint(0, 0), wxSize(GetWidth(), GetHeight()));
+MemPanel::MemPanel(const wxSize& size) : wxPanel() {this->size = size;}
+
+void MemPanel::setSurface() {
     int rows = 128;
     int col = 16;
+    table = new wxGrid(this, wxID_ANY, wxPoint(0, 0), size);
     table->CreateGrid(rows, col);
     table->SetRowLabelSize(85);
     table->SetColLabelSize(25);
@@ -16,8 +15,8 @@ MemPanel::MemPanel(Okno* o) : wxPanel() {
     table->SetLabelBackgroundColour(wxColour(44, 117, 255));
     table->SetLabelTextColour(wxColour(255, 255, 255));
 
-    char b[] = {'0', '0', '0', '0', '0', '0', '0', '0'};
-    short loc = 0;
+    wxFont* font = new wxFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Courier New");
+    char b[] = { '0', '0', '0', '0', '0', '0', '0', '0' };
     bool format = false;
     for (int i = 0; i < rows; i++) {
         table->SetRowSize(i, 25);
@@ -33,9 +32,9 @@ MemPanel::MemPanel(Okno* o) : wxPanel() {
             table->SetCellFont(i, j, *font);
             table->SetCellAlignment(i, j, wxALIGN_CENTRE, wxALIGN_CENTRE);
         }
-        table->SetRowLabelValue(i, wxString(std::string(b, sizeof(b)-1) + "0"));
+        table->SetRowLabelValue(i, wxString(std::string(b, sizeof(b) - 1) + "0"));
         b[6]++;
-        if (b[6] == '9'+1) b[6] = 'A';
+        if (b[6] == '9' + 1) b[6] = 'A';
         else if (b[6] > 'F') {
             b[6] = '0';
             short c = 5;
@@ -75,7 +74,7 @@ void MemPanel::checkValue(wxGridEvent& e) {
         e.Veto();
     }
     else {
-        for (int i = 0; i < str.Length(); i++) {
+        for (int i = 0; i < (int)str.Length(); i++) {
             if ((str[i] < '0') or (str[i] > '9')) {
                 if ((str[i] < 'A') or (str[i] > 'F')) {
                     if ((str[i] < 'a') or (str[i] > 'f')) { 
@@ -99,23 +98,26 @@ void MemPanel::checkValue(wxGridEvent& e) {
         e.Veto();
         if (str.length() == 1) { table->SetCellValue(k, j, wxString("0" + str)); }
         else table->SetCellValue(k, j, wxString(str));
-        /*int a;
-        if (k == 0) a = j;
-        else a = k*16+j;
-        setMemoryCell(a, std::stoi(str.ToStdString(), 0, 16));*/
-        setTheme(wxColour(0, 0, 0), wxColour(30, 30, 30), wxColour(102, 255, 0));
+        //setMemoryCell(k*16+j, std::stoi(str.ToStdString(), 0, 16));
+        //setTheme(wxColour(0, 0, 0), wxColour(30, 30, 30), wxColour(102, 255, 0));
     }
 }
+
+
 
 void MemPanel::denyResizeCol(wxGridSizeEvent& e) {
     table->SetColSize(e.GetRowOrCol(), 39);
     e.Veto();
 }
 
+
+
 void MemPanel::denyResizeRow(wxGridSizeEvent& e) {
     table->SetRowSize(e.GetRowOrCol(), 25);
     e.Veto();
 }
+
+
 
 void MemPanel::setTheme(const wxColour& label, const wxColour& cell, const wxColour& grid, const wxColour& text) {
     table->SetLabelBackgroundColour(label);
@@ -128,6 +130,8 @@ void MemPanel::setTheme(const wxColour& label, const wxColour& cell, const wxCol
     }
     table->SetGridLineColour(grid);
 }
+
+
 
 wxBEGIN_EVENT_TABLE(MemPanel, wxPanel)
 EVT_GRID_CELL_CHANGING(MemPanel::checkValue)

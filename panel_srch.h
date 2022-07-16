@@ -1,9 +1,8 @@
 #pragma once
-class MsgPanel : public wxPanel {
+class SrchPanel : public wxPanel {
 public:
-	MsgPanel(const wxSize&);
+	SrchPanel(const wxSize&);
 	void setSurface();
-
 	int GetWidth();
 	int GetHeight();
 private:

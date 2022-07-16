@@ -158,7 +158,7 @@
     <ClCompile Include="panel_mem.cpp" />
     <ClCompile Include="panel_msg.cpp" />
     <ClCompile Include="panel_regs.cpp" />
-    <ClCompile Include="panel_vars.cpp" />
+    <ClCompile Include="panel_srch.cpp" />
     <ClCompile Include="start.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -166,7 +166,7 @@
     <ClInclude Include="panel_mem.h" />
     <ClInclude Include="panel_msg.h" />
     <ClInclude Include="panel_regs.h" />
-    <ClInclude Include="panel_vars.h" />
+    <ClInclude Include="panel_srch.h" />
     <ClInclude Include="start.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

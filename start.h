@@ -1,11 +1,4 @@
 #pragma once
-#include <wx/app.h>
-#include <wx/frame.h>
-#include <wx/menu.h>
-#include <wx/panel.h>
-#include <wx/scrolbar.h>
-#include <wx/grid.h>
-#include <wx/msgdlg.h>
 
 class InitClass : public wxApp {
 public:
@@ -19,5 +12,9 @@ public:
 	int GetHeight();
 private:
 	wxSize size;
+	MemPanel* mempanel;
+	RegPanel* regpanel;
+	SrchPanel* srchpanel;
+	MsgPanel* msgpanel;
 };
 

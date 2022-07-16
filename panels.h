@@ -1,6 +1,13 @@
 #pragma once
-#include "start.h"
+#include <wx/app.h>
+#include <wx/frame.h>
+#include <wx/menu.h>
+#include <wx/panel.h>
+#include <wx/scrolbar.h>
+#include <wx/grid.h>
+#include <wx/msgdlg.h>
 #include "panel_mem.h"
-#include "panel_regs.h"
-#include "panel_vars.h"
+#include "panel_srch.h"
 #include "panel_msg.h"
+#include "panel_regs.h"
+#include "start.h"
