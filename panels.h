@@ -6,8 +6,10 @@
 #include <wx/scrolbar.h>
 #include <wx/grid.h>
 #include <wx/msgdlg.h>
+#include <wx/tipdlg.h> 
 #include "panel_mem.h"
 #include "panel_srch.h"
 #include "panel_msg.h"
 #include "panel_regs.h"
+#include "Cprocessor.hpp"
 #include "start.h"

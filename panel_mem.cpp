@@ -14,6 +14,7 @@ void MemPanel::setSurface() {
     table->SetLabelFont(wxFont(13, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MAX, false, "Arial"));
     table->SetLabelBackgroundColour(wxColour(44, 117, 255));
     table->SetLabelTextColour(wxColour(255, 255, 255));
+    table->SetGridLineColour(wxColour(0, 0, 0));
 
     wxFont* font = new wxFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Courier New");
     char b[] = { '0', '0', '0', '0', '0', '0', '0', '0' };
@@ -98,8 +99,7 @@ void MemPanel::checkValue(wxGridEvent& e) {
         e.Veto();
         if (str.length() == 1) { table->SetCellValue(k, j, wxString("0" + str)); }
         else table->SetCellValue(k, j, wxString(str));
-        //setMemoryCell(k*16+j, std::stoi(str.ToStdString(), 0, 16));
-        //setTheme(wxColour(0, 0, 0), wxColour(30, 30, 30), wxColour(102, 255, 0));
+        cp.setMemoryCell(k*16+j, std::stoi(str.ToStdString(), 0, 16));
     }
 }
 
@@ -131,6 +131,12 @@ void MemPanel::setTheme(const wxColour& label, const wxColour& cell, const wxCol
     table->SetGridLineColour(grid);
 }
 
+
+
+void MemPanel::setValue(int i, int j, const std::string& str) {
+    if ((str.length() > 2) or (str.empty())) {return;}
+    table->SetCellValue(i, j, str);
+}
 
 
 wxBEGIN_EVENT_TABLE(MemPanel, wxPanel)

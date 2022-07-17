@@ -9,7 +9,8 @@ public:
 	void checkValue(wxGridEvent&);
 	void denyResizeCol(wxGridSizeEvent&);
 	void denyResizeRow(wxGridSizeEvent&);
-	void setTheme(const wxColour&, const wxColour&, const wxColour&, const wxColour& text = wxColour(102, 255, 0));
+	void setTheme(const wxColour&, const wxColour&, const wxColour&, const wxColour&);
+	void setValue(int, int, const std::string&);
 
 private:
 	wxSize size;
