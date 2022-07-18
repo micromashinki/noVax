@@ -14,4 +14,5 @@ private:
 	wxSize size;
 	wxGrid* first_col = NULL;
 	wxGrid* sec_col = NULL;
+	wxDECLARE_EVENT_TABLE();
 };
