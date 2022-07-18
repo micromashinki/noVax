@@ -1,6 +1,6 @@
 #include <vector>
 
-#define MAX_SIZE 1000000
+#define SIZE_MEMORY 1000000
 
 #ifdef _WIN32
 #include <winsock.h>
@@ -22,7 +22,7 @@ public:
 		return memory;
 	}
 
-	Cmemory() : memory(MAX_SIZE + 5, 0) {
+	Cmemory() : memory(SIZE_MEMORY + 5, 0) {
 	}
 
 	void get(unsigned int index, uint8_t& dat) { dat = memory[index]; return; };

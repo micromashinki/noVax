@@ -1,30 +1,16 @@
-#include "Cmemory.hpp"
+﻿#pragma once
+#include <iomanip>
+#include <iostream>
 #include <stdint.h>
 #include <string> 
-#include <iostream>
 
-#pragma once
-class Cflags {
-public:
-	bool C { 0 };
-	bool V{ 0 };
-	bool Z{ 0 };
-	bool N{ 0 };
 
-	template<typename Type>
-	void setFlags(Type value) {
-		if (value == 0)
-			Z = true;
-		else 
-			Z = false;
+#include "Cflags.h"
+#include "Cmemory.hpp"
+#include "ini-parser-master/ini.h"
+#include "hex_printing.h"
 
-		if(value < (Type)MAXDWORD64)
-			N = true;
-		else
-			N = false;
-	}
 
-};
 
 class Cprocessor
 {
@@ -32,7 +18,36 @@ class Cprocessor
 	Cmemory memory;
 	std::vector<uint32_t> registr;
 	
+public:
+	void load(const std::string& path) {
+		IniFile file;
+		file.open(path);
+		auto section = file.get("Registers");
+		auto end = section->get("dfghgfd");
+		for (int i = 0; i < 16; i++) 
+			if (section->get("R" + int_to_hex(i)) != end)
+			  registr[i] = std::stoul(section->get("R" + int_to_hex(i))->second,0,16);
 
+		section = file.get("Memory");
+		end = section->get("dfghgfd");
+		for (int i = 0; i < SIZE_MEMORY; i += 16) {
+			if (section->get(int_to_hex_long_format(i)) != end) {
+				std::string line = section->get(int_to_hex_long_format(i))->second;
+				for (int j = 0; j < 16; j++) {
+					auto ff = (uint8_t)std::stoul(line, 0, 16);
+					memory.set(i + j, (uint8_t)std::stoul(line, 0, 16));
+
+					if (line.length() > 3) {
+						line.erase(0, 3);
+					}
+
+				}
+				
+			}
+		}
+	}
+
+private:
 	template<typename Type>
 	Type get(const uint32_t& index, bool finalOperation = true) {
 		uint8_t typeAdress;
@@ -98,14 +113,17 @@ class Cprocessor
 	void set(const uint32_t index, const Type value, bool finalOperation = true) {
 		uint8_t typeAdress;
 		memory.get(index, typeAdress);
-
+		bool flag = false;
 		auto h = typeAdress & 0xF0;
 		descriptionLastCommand.description += "set value: ";
+
 		if (h == 0x50) {
 			if (finalOperation)
 				registr[15] += 1;
-			registr[typeAdress - 0x50] = value;
+			registr[typeAdress - 0x50] = (uint32_t)value & (registr[typeAdress - 0x50] | ~registr[typeAdress - 0x50]);  //X2 ∧ (X1 ∨ !X1)
+			//registr[typeAdress - 0x50] = value;
 			descriptionLastCommand.description += "5X adress R" + std::to_string(typeAdress - 0x50) + " new value : " + std::to_string(registr[typeAdress - 0x50]) + "\n";
+			flag = true;
 		}
 
 		if (h == 0x60) {
@@ -117,6 +135,7 @@ class Cprocessor
 			Type dat;
 			memory.get(registr[typeAdress - 0x60], dat);
 			descriptionLastCommand.description += "6X adress MEM" + std::to_string(registr[typeAdress - 0x60]) + " new value : " + std::to_string(dat) + "\n";
+			flag = true;
 		}
 
 		if (h == 0x70) {
@@ -130,6 +149,7 @@ class Cprocessor
 			Type dat;
 			memory.get(registr[typeAdress - 0x70], dat);
 			descriptionLastCommand.description += "7X adress MEM" + std::to_string(registr[typeAdress - 0x70]) + " new value : " + std::to_string(dat) + "\n";
+			flag = true;
 		}
 
 		if (h == 0x80) {
@@ -142,7 +162,7 @@ class Cprocessor
 				registr[typeAdress - 0x80] += sizeof(Type);
 				registr[15] += 1;
 			}
-
+			flag = true;
 		}
 
 		if (h == 0x90) {
@@ -157,9 +177,10 @@ class Cprocessor
 				registr[15] += 1;
 				registr[typeAdress - 0x90] += 4;
 			}
+			flag = true;
 		}
-
-		descriptionLastCommand.description += " unknown address";
+		if(!flag)
+			descriptionLastCommand.description += " unknown address";
 		return;
 
 	}
@@ -170,6 +191,7 @@ class Cprocessor
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15], false);
 		flag.setFlags<Type>(op1 + op2);
+		flag.detectCflag<Type>(op1, op2);
 		set(registr[15], (Type)(op1 + op2));
 	}
 
@@ -177,7 +199,8 @@ class Cprocessor
 	void add3() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15]);
-		flag.setFlags(op1 + op2);
+		flag.setFlags<Type>(op1 + op2);
+		flag.detectCflag<Type>(op1, op2);
 		set(registr[15], (Type)(op1 + op2));
 	}
 
@@ -185,7 +208,8 @@ class Cprocessor
 	void sub2() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15], false);
-		flag.setFlags(op1 - op2);
+		flag.setFlags<Type>(op1 - op2);
+		flag.detectCflag<Type>(op1 ,~op2+1);
 		set(registr[15], (Type)(op1 - op2));
 	}
 
@@ -193,34 +217,53 @@ class Cprocessor
 	void sub3() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15]);
-		flag.setFlags(op1 - op2);
+		flag.setFlags<Type>(op1 - op2);
+		flag.detectCflag<Type>(op1, ~op2 + 1);
 		set(registr[15], (Type)(op1 - op2));
+	}
+
+	template<typename Type>
+	void adwc() {
+		Type op1 = get<Type>(registr[15]);
+		Type op2 = get<Type>(registr[15]);
+		set(registr[15], (Type)(op1, op2 + flag.C));
+		flag.setFlags<Type>(op1 + op2 + flag.C);
+	}
+	template<typename Type>
+	void sbwc() {
+		Type op1 = get<Type>(registr[15]);
+		Type op2 = get<Type>(registr[15], false);
+		set(registr[15], (Type)(op1 - op2 - flag.C));
+		flag.detectCflag<Type>(op1, (~op2 + 1 + ~flag.C + 1));
+		flag.setFlags<Type>(op1 - op2 - flag.C);
 	}
 
 	template<typename Type>
 	void inc() {
 		Type op1 = get<Type>(registr[15], false);
-		flag.setFlags(op1 + 1);
+		flag.setFlags<Type>(op1 + 1);
+		flag.detectCflag<Type>(op1, flag.C );
 		set(registr[15], (Type)(op1 + 1));
 	}
 
 	template<typename Type>
 	void dec() {
 		Type op1 = get<Type>(registr[15], false);
-		flag.setFlags(op1 - 1);
+		flag.setFlags<Type>(op1 - 1);
+		flag.detectCflag<Type>(op1, (~flag.C + 1));
 		set(registr[15], (Type)(op1 - 1));
 	}
 
 	template<typename Type>
 	void mco() {
 		Type op1 = get<Type>(registr[15]);
-		flag.setFlags(~op1);
+		flag.setFlags<Type>(~op1);
 		set(registr[15], (Type)(~op1));
 	}
 
 	template<typename Type>
 	void clr() {
-		flag.setFlags(0);
+		flag.setFlags<Type>(0);
 		set(registr[15], (Type)(0));
 	}
 
@@ -228,7 +271,7 @@ class Cprocessor
 	void bis() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15], false);
-		flag.setFlags(op1 | op2);
+		flag.setFlags<Type>(op1 | op2);
 		set(registr[15], (Type)(op1 | op2));
 	}
 
@@ -236,16 +279,22 @@ class Cprocessor
 	void bic() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15], false);
-		flag.setFlags(op1 & (~op2));
-		set(registr[15], (Type)(op1 & (~op2)));
+		flag.setFlags<Type>(op1 & (~op2));
+		set(registr[15], (Type)((~op2) & op1));
 	}
 
 	template<typename Type>
 	void xor_() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15], false);
-		flag.setFlags(op1 ^ op2);
+		flag.setFlags<Type>(op1 ^ op2);
 		set(registr[15], (Type)(op1 ^ op2));
+	}
+
+	template<typename Type>
+	void mov() {
+		Type op1 = get<Type>(registr[15]);
+		set(registr[15], (Type)op1);
 	}
 
 
@@ -254,7 +303,6 @@ public:
 	Cprocessor() : registr(16, 0) {
 	}
 	
-
 	struct SDescriptionLastCommand {
 		std::vector<uint32_t> changeCell;
 		std::string description;
@@ -262,7 +310,6 @@ public:
 private:
 	SDescriptionLastCommand descriptionLastCommand;
 public:
-
 	const SDescriptionLastCommand& getStepDescription(){
 		return descriptionLastCommand;
 	}
@@ -275,7 +322,7 @@ public:
 	}
 
 	void setMemoryCell(const uint32_t index, const uint8_t value) {
-		if (index <= MAX_SIZE)
+		if (index <= SIZE_MEMORY)
 			memory.set(index, (uint8_t)value);
 	}
 
@@ -296,7 +343,7 @@ public:
 		registr[15] += 1;
 
 
-		descriptionLastCommand.description = "command: ";
+		descriptionLastCommand.description = "adress command: "+ std::to_string(registr[15] -1) +"\ncommand: ";
 		switch (swit)
 		{
 		case 0x80:
@@ -443,8 +490,23 @@ public:
 			xor_<uint32_t>();
 			break;
 
+		case 0x90:
+			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			mov<uint8_t>();
+			break;
+		case 0xB0:
+			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			mov<uint16_t>();
+			break;
+		case 0xD0:
+			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			mov<uint32_t>();
+			break;
+
+
+
 		default:
-			descriptionLastCommand.description += "unknown command" + '\n';
+			descriptionLastCommand.description += " unknown command" + '\n';
 		}
 
 		return descriptionLastCommand;

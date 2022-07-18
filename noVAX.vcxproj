@@ -117,6 +117,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,10 +145,15 @@
     <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Cflags.h" />
+    <ClInclude Include="src\Cflags.h" />
     <ClInclude Include="src\Cmemory.hpp" />
     <ClInclude Include="src\Cprocessor.hpp" />
+    <ClInclude Include="src\hex_printing.h" />
+    <ClInclude Include="src\ini-parser-master\ini.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ini-parser-master\ini.cpp" />
     <ClCompile Include="src\noVAX.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
