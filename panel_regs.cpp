@@ -36,6 +36,12 @@ void RegPanel::setSurface() {
     wxTextCtrl* v_flag = new wxTextCtrl(this, wxID_ANY, "V = 0", wxPoint(190, 15), wxSize(50, 20), wxTE_READONLY);
     wxTextCtrl* c_flag = new wxTextCtrl(this, wxID_ANY, "C = 0", wxPoint(270, 15), wxSize(50, 20), wxTE_READONLY);
 
+    n_flag->SetBackgroundColour(cells);
+    z_flag->SetBackgroundColour(cells);
+    v_flag->SetBackgroundColour(cells);
+    c_flag->SetBackgroundColour(cells);
+
+
     int rows = 8;
     int col = 2;
 
@@ -122,11 +128,11 @@ void RegPanel::checkValue(wxGridEvent& e) {
         e.Veto();
         if (j == 0) {
              first_col->SetCellValue(k, j, wxString(str));
-             cp.setRegisterCell(k * 16 + j, std::stoi(str.ToStdString(), 0, 16));
+          //   cp.setRegisterCell(k * 16 + j, std::stoi(str.ToStdString(), 0, 16)); // doesnt work(((
         }
         else
              sec_col->SetCellValue(k, j, wxString(str));
-             cp.setRegisterCell(k * 16 + j, std::stoi(str.ToStdString(), 0, 16));
+            // cp.setRegisterCell(k * 16 + j, std::stoi(str.ToStdString(), 0, 16)); // doesnt work(((
     }
    
 }
