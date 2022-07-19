@@ -1,4 +1,4 @@
-#include "panels.h"
+﻿#include "panels.h"
 
 Cprocessor cp;
 
@@ -50,7 +50,8 @@ int Okno::GetHeight() { return size.GetHeight();}
 
 void Okno::setDark(wxCommandEvent& e) {
     if (menuFile->IsChecked(ID_Dark)) {
-        mempanel->setTheme(wxColour(0, 0, 0), wxColour(30, 30, 30), wxColour(102, 255, 0), wxColour(102, 255, 0));
+        //(66, 163, 0) or (62, 183, 0)
+        mempanel->setTheme(wxColour(0, 0, 0), wxColour(30, 30, 30), wxColour(66, 163, 0), wxColour(66, 163, 0));
     }
     else {
         mempanel->setTheme(wxColour(44, 117, 255), wxColour(255, 255, 255), wxColour(0, 0, 0), wxColour(255, 255, 255));
