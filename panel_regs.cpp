@@ -40,7 +40,8 @@ void RegPanel::setSurface() {
     z_flag->SetBackgroundColour(cells);
     v_flag->SetBackgroundColour(cells);
     c_flag->SetBackgroundColour(cells);
-
+   
+    // цвет рамочки я не понял как поменять
 
     int rows = 8;
     int col = 2;
@@ -57,6 +58,7 @@ void RegPanel::setSurface() {
         first_col->SetCellBackgroundColour(i, 0, cells);
         first_col->SetRowLabelValue(i, wxString(_("R") + std::to_string(i)));
         first_col->SetCellAlignment(i, 0, wxALIGN_CENTRE, wxALIGN_CENTRE);
+        first_col->SetCellValue(i, 0, wxString("00000000"));
         
     }
     first_col->SetRowLabelSize (30);
@@ -81,6 +83,7 @@ void RegPanel::setSurface() {
         sec_col->SetCellBackgroundColour(i, 1,cells);
         sec_col->SetRowLabelValue(i, wxString(_("R") + hex[i]));
         sec_col->SetCellAlignment(i, 1, wxALIGN_CENTRE, wxALIGN_CENTRE);
+        sec_col->SetCellValue(i, 1, wxString("00000000"));
     }
     sec_col->SetRowLabelSize(30);
     sec_col->SetColSize(0, 0);
