@@ -7,6 +7,9 @@ void drawProccessor(Cprocessor& processor) {
     auto g = processor.getStepDescription();
     std::cout << g.description<<std::endl;
     auto r = processor.getRegister();
+    auto l = processor.getFlags();
+
+    std::cout << "N: " << l.N << "  Z: " << l.Z << "  V: " << l.V << "  C: " << l.C<<std::endl;
     for (int i = 0; i < 16; i++)
         std::cout << "R" << std::hex << i << std::setw(1) << "=" << std::setw(1) << std::hex <<(int)r[i]<< std::setw(3);
 
@@ -35,7 +38,10 @@ int main()
 {
     Cprocessor pr;
     uint32_t ad = 0x0;
-    pr.load("5.v11");
+    pr.load("C:\\Users\\Chubr\\Desktop\\t2.v11");
+    
+    pr.step();
+    drawProccessor(pr);
     //pr.setMemoryCell(ad++, 0xA0);
     //pr.setMemoryCell(ad++, 0x50);
     //pr.setMemoryCell(ad++, 0x51);
@@ -44,7 +50,7 @@ int main()
    // pr.setRegisterCell(0x1, 0x1111111);
 
 
-    drawProccessor(pr);
+    
   //  pr.step();
    // drawProccessor(pr);
 

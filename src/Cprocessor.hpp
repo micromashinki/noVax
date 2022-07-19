@@ -105,6 +105,85 @@ private:
 			}
 			return dat;
 		}
+
+		if (h == 0xA0) {
+			uint8_t dat;
+			Type data;
+			memory.get(registr[typeAdress - 0xA0] + 1, dat);
+			memory.get(dat + registr[typeAdress - 0xA0 ] + 2, data);
+
+			if (finalOperation) {
+				registr[typeAdress - 0xA0] += sizeof(dat) + 1;
+			}
+			return data;
+		}
+
+		if (h == 0xC0) {
+			uint16_t dat;
+			Type data;
+			memory.get(registr[typeAdress - 0xC0] + 1, dat);
+			memory.get(dat + registr[typeAdress - 0xC0] + 3, data);
+
+			if (finalOperation) {
+				registr[typeAdress - 0xC0] += sizeof(dat) + 1;
+			}
+			return data;
+		}
+
+		if (h == 0xE0) {
+			uint32_t dat;
+			Type data;
+			memory.get(registr[typeAdress - 0xE0] + 1, dat);
+			memory.get(dat + registr[typeAdress - 0xE0] + 5, data);
+
+			if (finalOperation) {
+				registr[typeAdress - 0xE0] += sizeof(dat) + 1;
+			}
+			return data;
+		}
+
+		if (h == 0xB0) {
+			uint8_t dat;
+			Type data;
+			uint32_t adress;
+			memory.get(registr[typeAdress - 0xB0] + 1, dat);
+			memory.get(dat + registr[typeAdress - 0xB0] + 2, adress);
+			memory.get(adress, data);
+
+			if (finalOperation) {
+				registr[typeAdress - 0xB0] += sizeof(dat) + 1;
+			}
+			return data;
+		}
+
+		if (h == 0xD0) {
+			uint16_t dat;
+			Type data;
+			uint32_t adress;
+			memory.get(registr[typeAdress - 0xD0] + 1, dat);
+			memory.get(dat + registr[typeAdress - 0xD0] + 3, adress);
+			memory.get(adress, data);
+
+			if (finalOperation) {
+				registr[typeAdress - 0xD0] += sizeof(dat) + 1;
+			}
+			return data;
+		}
+
+		if (h == 0xF0) {
+			uint32_t dat;
+			Type data;
+			uint32_t adress;
+			memory.get(registr[typeAdress - 0xF0] + 1, dat);
+			memory.get(dat + registr[typeAdress - 0xF0] + 5, adress);
+			memory.get(adress, data);
+
+			if (finalOperation) {
+				registr[typeAdress - 0xF0] += sizeof(dat) + 1;
+			}
+			return data;
+		}
+
 		descriptionLastCommand.description += " unknown address";
 		return 0;
 	}
@@ -120,8 +199,9 @@ private:
 		if (h == 0x50) {
 			if (finalOperation)
 				registr[15] += 1;
-			registr[typeAdress - 0x50] = (uint32_t)value & (registr[typeAdress - 0x50] | ~registr[typeAdress - 0x50]);  //X2 ∧ (X1 ∨ !X1)
-			//registr[typeAdress - 0x50] = value;
+
+			//registr[typeAdress - 0x50] = (uint32_t)value & (registr[typeAdress - 0x50] | ~registr[typeAdress - 0x50]);  //X2 ∧ (X1 ∨ !X1)
+			registr[typeAdress - 0x50] = value;
 			descriptionLastCommand.description += "5X adress R" + std::to_string(typeAdress - 0x50) + " new value : " + std::to_string(registr[typeAdress - 0x50]) + "\n";
 			flag = true;
 		}
@@ -179,6 +259,82 @@ private:
 			}
 			flag = true;
 		}
+
+		if (h == 0xA0) {
+			uint8_t dat;
+			memory.get(registr[typeAdress - 0xA0] + 1, dat);
+			memory.set(dat + registr[typeAdress - 0xA0] + 2, value);
+
+			if (finalOperation) {
+				registr[typeAdress - 0xA0] += sizeof(dat) + 1;
+			}
+			flag = true;
+		}
+
+		if (h == 0xC0) {
+			uint16_t dat;
+			memory.get(registr[typeAdress - 0xC0] + 1, dat);
+			memory.set(dat + registr[typeAdress - 0xC0] + 3, value);
+
+			if (finalOperation) {
+				registr[typeAdress - 0xC0] += sizeof(dat) + 1;
+			}
+			flag = true;
+		}
+
+		if (h == 0xE0) {
+			uint32_t dat;
+			memory.get(registr[typeAdress - 0xE0] + 1, dat);
+			memory.set(dat + registr[typeAdress - 0xE0] + 5, value);
+
+			if (finalOperation) {
+				registr[typeAdress - 0xE0] += sizeof(dat) + 1;
+			}
+			flag = true;
+		}
+
+		if (h == 0xB0) {
+			uint8_t dat;
+			Type data;
+			uint32_t adress;
+			memory.get(registr[typeAdress - 0xB0] + 1, dat);
+			memory.get(dat + registr[typeAdress - 0xB0] + 2, adress);
+			memory.set(adress, value);
+
+			if (finalOperation) {
+				registr[typeAdress - 0xB0] += sizeof(dat) + 1;
+			}
+			flag = true;
+		}
+
+		if (h == 0xD0) {
+			uint16_t dat;
+			Type data;
+			uint32_t adress;
+			memory.get(registr[typeAdress - 0xD0] + 1, dat);
+			memory.get(dat + registr[typeAdress - 0xD0] + 3, adress);
+			memory.set(adress, value);
+
+			if (finalOperation) {
+				registr[typeAdress - 0xD0] += sizeof(dat) + 1;
+			}
+			flag = true;
+		}
+
+		if (h == 0xF0) {
+			uint32_t dat;
+			Type data;
+			uint32_t adress;
+			memory.get(registr[typeAdress - 0xF0] + 1, dat);
+			memory.get(dat + registr[typeAdress - 0xF0] + 5, adress);
+			memory.set(adress, value);
+
+			if (finalOperation) {
+				registr[typeAdress - 0xF0] += sizeof(dat) + 1;
+			}
+			flag = true;
+		}
+
 		if(!flag)
 			descriptionLastCommand.description += " unknown address";
 		return;

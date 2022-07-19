@@ -1,4 +1,5 @@
 #include <limits.h>
+#include <cstdint>
 #pragma once
 
 class Cflags {
@@ -16,21 +17,23 @@ public:
 		else
 			Z = false;
 
-	//	if (value > (Type)MAXDWORD64/2)
-	//		N = true;
-	//	else
-	//		N = false;
+		if (value > (Type)UINT64_MAX/2)
+			N = true;
+		else
+			N = false;
 
 		value = value >> sizeof(Type);
-		V = value >> 1;
+		C = value >> 1;
 	}
 
 	template<typename Type>
 	void detectCflag(Type a,Type b) {
-		//if ((Type)MAXDWORD64 / 2 > a && (Type)MAXDWORD64 / 2 < b || (Type)MAXDWORD64 / 2 < a && (Type)MAXDWORD64 / 2 > b)
-	//		C = true;
-	//	else
-	//		C = false;
+
+		Type fgh = UINT64_MAX;
+		if (((Type)UINT64_MAX / 2 > a && (Type)UINT64_MAX / 2 < b) || ((Type)UINT64_MAX / 2 < a && (Type)UINT64_MAX / 2 > b))
+			V = true;
+		else
+			V = false;
 	}
 
 };
