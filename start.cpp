@@ -2,6 +2,8 @@
 
 Cprocessor cp;
 
+
+
 enum {
     ID_Step = 1,
     ID_Dark = 2,
@@ -70,13 +72,19 @@ void Okno::showAbout(wxCommandEvent& e) {
 }
 
 void Okno::startProgram(wxCommandEvent&) {
-    cp.setRegisterCell(15, 0x30);
-    cp.setRegisterCell(0, 0x40);
-    cp.setRegisterCell(1, 0x50);
-    SDescriptionLastCommand cc = cp.step();
+
+
+    Cprocessor::SDescriptionLastCommand cc = cp.step();
     for (int i = 0; i < cc.changeCell.size(); i++) {
         int a = cc.changeCell[i];
         mempanel->setValue(a / 16, a % 16, int_to_hex(cp.getMemory()[a]));
+    }
+     std::vector<uint32_t> sasha_i_lesha_uebani= cp.getRegister();
+    for (int i = 0; i < 16; i++) {
+
+        regpanel->setValue(i, int_to_hex(sasha_i_lesha_uebani[i]));
+    
+
     }
 }
 

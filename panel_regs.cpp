@@ -18,6 +18,7 @@ void RegPanel::setSurface() {
     wxColor lines = wxColor(122, 189, 222);
     wxColor cells = wxColor(230, 230, 250);
     wxColor white = wxColor(255, 255, 255);
+     Cflags const flags1 = cp.getFlags();
     
     
 
@@ -131,11 +132,12 @@ void RegPanel::checkValue(wxGridEvent& e) {
         e.Veto();
         if (j == 0) {
              first_col->SetCellValue(k, j, wxString(str));
-          //   cp.setRegisterCell(k * 16 + j, std::stoi(str.ToStdString(), 0, 16)); // doesnt work(((
+             cp.setRegisterCell(k, std::stoul(str.ToStdString(), 0, 16)); //work)))
         }
-        else
-             sec_col->SetCellValue(k, j, wxString(str));
-            // cp.setRegisterCell(k * 16 + j, std::stoi(str.ToStdString(), 0, 16)); // doesnt work(((
+        else {
+            sec_col->SetCellValue(k, j, wxString(str));
+            cp.setRegisterCell(k + 8, std::stoul(str.ToStdString(), 0, 16));
+        }
     }
    
 }
@@ -153,6 +155,13 @@ void RegPanel::denyResizeRow(wxGridSizeEvent& e) {
     first_col->SetRowSize(e.GetRowOrCol(), 26);
     sec_col->SetRowSize(e.GetRowOrCol(), 26);
     e.Veto();
+}
+
+
+void RegPanel::setValue(int i, const std::string& str) {
+    if ((str.length() > 2) or (str.empty())) { return; }
+    if( i > 7) sec_col->SetCellValue(i-8, 1, str);
+    else first_col->SetCellValue(i, 0, str);
 }
 
 
