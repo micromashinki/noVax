@@ -340,119 +340,173 @@ private:
 		return;
 
 	}
+	template<typename Type>
 
+	Type add(Type op1, Type op2, bool flagC = 0) {
+		uint64_t result = (uint64_t)op1 + (uint64_t)op2 +(uint64_t)(flagC?1:0);
+		int nBit = (sizeof(Type) * 8);
+		uint64_t cMask = ((uint64_t)1 << nBit); // carry bit mask
+		Type sMask = ((Type)1 << (nBit-1));     // sign bit mask
+		flag.C = ((result & cMask) !=0);
+		flag.Z = (Type)result == 0;
+		flag.N = (result & sMask) != 0;
+		bool carryToSign = ((op1 ^ op2 ^ (Type)result) & sMask ) != 0; // carry to sign bit
+		flag.V = flag.C != carryToSign;
+//		bool flagV = flag.C != flag.N;
+		return result;
+	}
+
+	template<typename Type>
+
+	Type sub(Type op1, Type op2, bool flagC = 0) {
+		uint64_t result = (uint64_t)op1 - (uint64_t)op2 - (uint64_t)(flagC ? 1 : 0);
+		int nBit = (sizeof(Type) * 8);
+		uint64_t cMask = ((uint64_t)1 << nBit); // carry bit mask
+		Type sMask = ((Type)1 << (nBit - 1));     // sign bit mask
+		flag.C = ((result & cMask) != 0);
+		flag.Z = (Type)result == 0;
+		flag.N = (result & sMask) != 0;
+		bool carryToSign = ((op1 ^ op2 ^ (Type)result) & sMask) != 0; // carry to sign bit
+		flag.V = flag.C != carryToSign;
+		//		bool flagV = flag.C != flag.N;
+		return result;
+	}
 
 	template<typename Type>
 	void add2() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15], false);
-		flag.setFlags<Type>(op1 + op2);
-		flag.detectCflag<Type>(op1, op2);
-		set(registr[15], (Type)(op1 + op2));
+		set(registr[15], (Type)add(op1,op2));
 	}
 
 	template<typename Type>
 	void add3() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15]);
-		flag.setFlags<Type>(op1 + op2);
-		flag.detectCflag<Type>(op1, op2);
-		set(registr[15], (Type)(op1 + op2));
+		set(registr[15], (Type)add(op1, op2));
 	}
 
 	template<typename Type>
 	void sub2() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15], false);
-		flag.setFlags<Type>(op1 - op2);
-		flag.detectCflag<Type>(op1 ,~op2+1);
-		set(registr[15], (Type)(op1 - op2));
+		set(registr[15], (Type)(sub(op1,op2)));
 	}
 
 	template<typename Type>
 	void sub3() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15]);
-		flag.setFlags<Type>(op1 - op2);
-		flag.detectCflag<Type>(op1, ~op2 + 1);
-		set(registr[15], (Type)(op1 - op2));
+		set(registr[15], (Type)(sub(op1, op2)));
 	}
 
 	template<typename Type>
 	void adwc() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15]);
-		set(registr[15], (Type)(op1, op2 + flag.C));
-		flag.setFlags<Type>(op1 + op2 + flag.C);
+		set(registr[15], (Type)(add(op1,op2,flag.C)));
 	}
 	template<typename Type>
 	void sbwc() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15], false);
-		set(registr[15], (Type)(op1 - op2 - flag.C));
-		flag.detectCflag<Type>(op1, (~op2 + 1 + ~flag.C + 1));
-		flag.setFlags<Type>(op1 - op2 - flag.C);
+		set(registr[15], (Type)(sub(op1, op2, flag.C)));
 	}
 
 	template<typename Type>
 	void inc() {
 		Type op1 = get<Type>(registr[15], false);
-		flag.setFlags<Type>(op1 + 1);
-		flag.detectCflag<Type>(op1, flag.C );
-		set(registr[15], (Type)(op1 + 1));
+		set(registr[15], add(op1, (Type)1));
 	}
 
 	template<typename Type>
 	void dec() {
 		Type op1 = get<Type>(registr[15], false);
-		flag.setFlags<Type>(op1 - 1);
-		flag.detectCflag<Type>(op1, (~flag.C + 1));
-		set(registr[15], (Type)(op1 - 1));
+		set(registr[15], sub(op1, (Type)1));
 	}
 
 	template<typename Type>
 	void mco() {
 		Type op1 = get<Type>(registr[15]);
-		flag.setFlags<Type>(~op1);
 		set(registr[15], (Type)(~op1));
+		
+		flag.V = 0;
+		flag.Z = (~op1) == 0 ? 0 : 1;
+		flag.N = (Type)MAXINT64 / 2 > op1 ? 1:0;
+		
 	}
 
 	template<typename Type>
 	void clr() {
-		flag.setFlags<Type>(0);
 		set(registr[15], (Type)(0));
+		flag.V = 0;
+		flag.Z = 1;
+		flag.N = 0;
 	}
 
 	template<typename Type>
 	void bis() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15], false);
-		flag.setFlags<Type>(op1 | op2);
 		set(registr[15], (Type)(op1 | op2));
+		flag.V = 0;
+		flag.Z = (op1 | op2) == 0 ? 0 : 1;
+		flag.N = (Type)MAXINT64 / 2 > (op1 | op2) ? 1 : 0;
 	}
 
 	template<typename Type>
 	void bic() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15], false);
-		flag.setFlags<Type>(op1 & (~op2));
 		set(registr[15], (Type)((~op2) & op1));
+		flag.V = 0;
+		flag.Z = ((~op2) & op1) == 0 ? 0 : 1;
+		flag.N = (Type)MAXINT64 / 2 > (~op2) & op1 ? 1 : 0;
 	}
 
 	template<typename Type>
 	void xor_() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15], false);
-		flag.setFlags<Type>(op1 ^ op2);
 		set(registr[15], (Type)(op1 ^ op2));
+
+		flag.V = 0;
+		flag.Z = op1 ^ op2 == 0 ? 0: 1;
+		flag.N = (Type)MAXINT64 / 2 > op1 ^ op2 ? 1 : 0;
 	}
 
 	template<typename Type>
 	void mov() {
 		Type op1 = get<Type>(registr[15]);
 		set(registr[15], (Type)op1);
+
+		flag.V = 0;
+		flag.Z = op1 == 0 ? 0 : 1;
+		flag.N = (Type)MAXINT64 / 2 > op1 ? 1 : 0;
 	}
 
+	template<typename Type>
+	void brbw() {
+		Type op1 = get<Type>(registr[15]);
+		registr[15] += op1;
+	}
+
+	template<typename Type>
+	void jmp() {
+		Type op1 = get<Type>(registr[15]);
+		registr[15] = op1;
+	}
+
+	template<typename Type>
+	void jsb() {
+		registr[14] -= 4;
+		set(registr[14], registr[15]);
+		registr[15] = get<Type>(registr[15]);
+	}
+	template<typename Type>
+	void rsb() {
+		registr[15] = get<Type>(registr[14]);
+	}
 
 
 public:
@@ -483,9 +537,11 @@ public:
 	}
 
 	void setRegisterCell(const uint8_t index, const uint32_t value) {
-		if (index <= 16)
+		if (index < 16)
 			registr[index] = value;
 	}
+
+
 	const Cflags& getFlags() {
 		return flag;
 	}
@@ -494,170 +550,194 @@ public:
 	const SDescriptionLastCommand& step() {
 		descriptionLastCommand.changeCell.clear();
 		descriptionLastCommand.description.clear();
-		uint8_t swit;
-		memory.get(registr[15], swit);
+		uint8_t mackCommand;
+		memory.get(registr[15], mackCommand);
 		registr[15] += 1;
 
 
 		descriptionLastCommand.description = "adress command: "+ std::to_string(registr[15] -1) +"\ncommand: ";
-		switch (swit)
+		switch (mackCommand)
 		{
 		case 0x80:
-			descriptionLastCommand.description += std::to_string(swit)+'\n';
+			descriptionLastCommand.description += std::to_string(mackCommand)+'\n';
 			add2<uint8_t>();
 			break;
 		case 0xA0:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			add2<uint16_t>();
 			break;
 		case 0xC0:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			add2<uint32_t>();
 			break;
 
 		case 0x81:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			add3<uint8_t>();
 			break;
 		case 0xA1:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			add3<uint16_t>();
 			break;
 		case 0xC1:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			add3<uint32_t>();
 			break;
 
 		case 0x82:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			sub2<uint8_t>();
 			break;
 		case 0xA2:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			sub2<uint16_t>();
 			break;
 		case 0xC2:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			sub2<uint32_t>();
 			break;
 
 		case 0x83:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			sub3<uint8_t>();
 			break;
 		case 0xA3:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			sub3<uint16_t>();
 			break;
 		case 0xC3:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			sub3<uint32_t>();
 			break;
 
 		case 0x96:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			inc<uint8_t>();
 			break;
 		case 0xB6:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			inc<uint16_t>();
 			break;
 		case 0xD6:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			inc<uint32_t>();
 			break;
 
 		case 0x97:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			dec<uint8_t>();
 			break;
 		case 0xB7:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			dec<uint16_t>();
 			break;
 		case 0xD7:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			dec<uint32_t>();
 			break;
 
 		case 0x92:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			mco<uint8_t>();
 			break;
 		case 0xB2:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			mco<uint16_t>();
 			break;
 		case 0xD2:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			mco<uint32_t>();
 			break;
 
 		case 0x94:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			clr<uint8_t>();
 			break;
 		case 0xB4:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			clr<uint16_t>();
 			break;
 		case 0xD4:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			clr<uint32_t>();
 			break;
 
 		case 0x88:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			bis<uint8_t>();
 			break;
 		case 0xA8:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			bis<uint16_t>();
 			break;
 
 		case 0xC8:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			bis<uint32_t>();
 			break;
 
 		case 0x8A:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			bic<uint8_t>();
 			break;
 		case 0xAA:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			bic<uint16_t>();
 			break;
 		case 0xCA:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			bic<uint32_t>();
 			break;
 
 		case 0x8C:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			xor_<uint8_t>();
 			break;
 		case 0xAC:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			xor_<uint16_t>();
 			break;
 		case 0xCC:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			xor_<uint32_t>();
 			break;
 
 		case 0x90:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			mov<uint8_t>();
 			break;
 		case 0xB0:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			mov<uint16_t>();
 			break;
 		case 0xD0:
-			descriptionLastCommand.description += std::to_string(swit) + '\n';
+			descriptionLastCommand.description += std::to_string(mackCommand) + '\n';
 			mov<uint32_t>();
 			break;
+
+
+		case 0x11:
+			brbw<uint8_t>();
+			break;
+
+		case 0x31:
+			brbw<uint16_t>();
+			break;
+
+		case 0x17:
+			jmp<uint32_t>();
+			break;
+
+		case 0x16:
+			jsb<uint32_t>();
+			break;
+		case 0x05:
+			rsb<uint32_t>();
+			break;
+
+
+
+
 
 
 
