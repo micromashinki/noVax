@@ -9,7 +9,7 @@ enum {
 };
 
 bool InitClass::OnInit() {
-    Okno* frame = new Okno("EblR-22", wxSize(1089, 700));
+    Okno* frame = new Okno("EР«РЇ-22", wxSize(1089, 700));
     frame->Show(true);
 	return true;
 }
@@ -35,13 +35,13 @@ Okno::Okno(const wxString& str, const wxSize& s) : wxFrame (NULL, wxID_ANY, str,
     //msgpanel->setSurface();
 
     menuFile = new wxMenu;
-    menuFile->Append(ID_Step, "ПУСК");
+    menuFile->Append(ID_Step, "РџРЈРЎРљ");
     menuFile->AppendSeparator();
-    menuFile->AppendCheckItem(ID_Dark, "ТёМнАя тЕмА");
-    menuFile->Append(ID_About, "О программе");
+    menuFile->AppendCheckItem(ID_Dark, "РўС‘РњРЅРђСЏ С‚Р•РјРђ");
+    menuFile->Append(ID_About, "Рћ РїСЂРѕРіСЂР°РјРјРµ");
 
     wxMenuBar* menuBar = new wxMenuBar;
-    menuBar->Append(menuFile, "пердеш гавнёж");
+    menuBar->Append(menuFile, "РїРµСЂРґРµС€ РіР°РІРЅС‘Р¶");
     SetMenuBar(menuBar);
 }
 
@@ -59,17 +59,24 @@ void Okno::setDark(wxCommandEvent& e) {
 
 void Okno::showAbout(wxCommandEvent& e) {
     std::string creators;
-    creators += "Создатели:\n";
-    creators += "Лёха-кабан\n";
-    creators += "Душнильный менеджер говна (Жидкий)\n";
-    creators += "Кислый\n";
-    creators += "Слабченко (Пивной сомелье)\n";
+    creators += "РЎРѕР·РґР°С‚РµР»Рё:\n";
+    creators += "Р›С‘С…Р°-РєР°Р±Р°РЅ\n";
+    creators += "Р”СѓС€РЅРёР»СЊРЅС‹Р№ РјРµРЅРµРґР¶РµСЂ РіРѕРІРЅР° (Р–РёРґРєРёР№)\n";
+    creators += "РљРёСЃР»С‹Р№\n";
+    creators += "РЎР»Р°Р±С‡РµРЅРєРѕ (РџРёРІРЅРѕР№ СЃРѕРјРµР»СЊРµ)\n";
     creators += "\n\n\t\t\t========(c) Micromashinki, 2022========";
-    wxMessageBox(creators, "Пошёл нахуй");
+    wxMessageBox(creators, "РџРѕС€С‘Р» РЅР°С…СѓР№");
 }
 
 void Okno::startProgram(wxCommandEvent&) {
-    wxMessageBox("No est' odin nyuans", ")))");
+    cp.setRegisterCell(15, 0x30);
+    cp.setRegisterCell(0, 0x40);
+    cp.setRegisterCell(1, 0x50);
+    SDescriptionLastCommand cc = cp.step();
+    for (int i = 0; i < cc.changeCell.size(); i++) {
+        int a = cc.changeCell[i];
+        mempanel->setValue(a / 16, a % 16, int_to_hex(cp.getMemory()[a]));
+    }
 }
 
 wxBEGIN_EVENT_TABLE(Okno, wxFrame)
