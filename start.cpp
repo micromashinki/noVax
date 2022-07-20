@@ -1,13 +1,18 @@
 ﻿#include "panels.h"
 
+
 Cprocessor cp;
-
-
+MemPanel* mempanel;
+RegPanel* regpanel;
+SrchPanel* srchpanel;
+MsgPanel* msgpanel;
 
 enum {
     ID_Step = 1,
     ID_Dark = 2,
-    ID_About = 3
+    ID_About = 3,
+    ID_Open = 4,
+    ID_Save = 5
 };
 
 bool InitClass::OnInit() {
@@ -19,7 +24,7 @@ bool InitClass::OnInit() {
 Okno::Okno(const wxString& str, const wxSize& s) : wxFrame (NULL, wxID_ANY, str, wxDefaultPosition, s) {
     size = s;
     SetMinSize(s);
-    //SetMaxSize(s);
+    SetMaxSize(s);
     mempanel = new MemPanel(wxSize(GetWidth() / 1.5, GetHeight() - 250));
     mempanel->Create(this, wxID_ANY, wxPoint(0, 0), wxSize(mempanel->GetWidth(), mempanel->GetHeight()));
     mempanel->setSurface();
@@ -37,13 +42,23 @@ Okno::Okno(const wxString& str, const wxSize& s) : wxFrame (NULL, wxID_ANY, str,
     msgpanel->setSurface();
 
     menuFile = new wxMenu;
-    menuFile->Append(ID_Step, "ПУСК");
-    menuFile->AppendSeparator();
-    menuFile->AppendCheckItem(ID_Dark, "ТёМнАя тЕмА");
-    menuFile->Append(ID_About, "О программе");
+    menuFile->Append(ID_Open, "Открыть");
+    menuFile->Append(ID_Save, "Сохранить");
+
+    menuFile2 = new wxMenu;
+    menuFile2->Append(ID_Step, "ПУСК");
+
+    menuFile3 = new wxMenu;
+    menuFile3->AppendCheckItem(ID_Dark, "Тёмная тема");
+
+    menuFile4 = new wxMenu;
+    menuFile4->Append(ID_About, "О программе");
 
     wxMenuBar* menuBar = new wxMenuBar;
-    menuBar->Append(menuFile, "пердеш гавнёж");
+    menuBar->Append(menuFile, "Файл");
+    menuBar->Append(menuFile2, "Отладка");
+    menuBar->Append(menuFile3, "Настройки");
+    menuBar->Append(menuFile4, "Справка");
     SetMenuBar(menuBar);
 }
 
@@ -51,40 +66,49 @@ int Okno::GetWidth() { return size.GetWidth(); }
 int Okno::GetHeight() { return size.GetHeight();}
 
 void Okno::setDark(wxCommandEvent& e) {
-    if (menuFile->IsChecked(ID_Dark)) {
+    if (menuFile3->IsChecked(ID_Dark)) {
         //(66, 163, 0) or (62, 183, 0)
-        mempanel->setTheme(wxColour(0, 0, 0), wxColour(30, 30, 30), wxColour(66, 163, 0), wxColour(66, 163, 0));
+        mempanel->setTheme(wxColour(0, 0, 0), wxColour(30, 30, 30), wxColour(66, 163, 0), wxColour(66, 163, 0), wxColour(66, 163, 0));
     }
     else {
-        mempanel->setTheme(wxColour(44, 117, 255), wxColour(255, 255, 255), wxColour(0, 0, 0), wxColour(255, 255, 255));
+        mempanel->setTheme(LINES_AND_LABELS_DEFAULT, CELLS_DEFAULT, LINES_AND_LABELS_DEFAULT, TEXT_LABEL_DEFAULT, TEXT_DEFAULT);
     }
 }
 
 void Okno::showAbout(wxCommandEvent& e) {
     std::string creators;
-    creators += "Создатели:\n";
+    /*creators += "Создатели:\n";
     creators += "Лёха-кабан\n";
     creators += "Душнильный менеджер говна (Жидкий)\n";
     creators += "Кислый\n";
-    creators += "Слабченко (Пивной сомелье)\n";
+    creators += "Слабченко (Пивной сомелье)\n";*/
     creators += "\n\n\t\t\t========(c) Micromashinki, 2022========";
-    wxMessageBox(creators, "Пошёл нахуй");
+    wxMessageBox(creators, "О программе");
 }
 
-void Okno::startProgram(wxCommandEvent&) {
-
-
-    Cprocessor::SDescriptionLastCommand cc = cp.step();
-    for (int i = 0; i < cc.changeCell.size(); i++) {
-        int a = cc.changeCell[i];
-        mempanel->setValue(a / 16, a % 16, int_to_hex(cp.getMemory()[a]));
+void Okno::startProgram(wxCommandEvent& e) {
+    cp.step();
+    std::vector<uint8_t> mem = cp.getMemory();
+    for (int i = 0; i < (128 * 16); i++) {
+        mempanel->setValue(i / 16, i % 16, int_to_hex(mem[i]));
     }
-     std::vector<uint32_t> sasha_i_lesha_uebani= cp.getRegister();
+    std::vector<uint32_t> sasha_i_lesha_uebani= cp.getRegister();
     for (int i = 0; i < 16; i++) {
-
         regpanel->setValue(i, int_to_hex(sasha_i_lesha_uebani[i]));
-    
+    }
+}
 
+void Okno::openFile(wxCommandEvent& e) {
+    wxFileDialog* fd = new wxFileDialog(this, wxString("Open v11 file"), "", "", "*.v11|*.v11", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+    if (fd->ShowModal() == wxID_CANCEL) return;
+    cp.load(fd->GetPath().ToStdString());
+    std::vector<uint8_t> mem = cp.getMemory();
+    for (int i = 0; i < (128 * 16); i++) {
+        mempanel->setValue(i / 16, i % 16, int_to_hex(mem[i]));
+    }
+    std::vector<uint32_t> sasha_i_lesha_uebani = cp.getRegister();
+    for (int i = 0; i < 16; i++) {
+        regpanel->setValue(i, int_to_hex(sasha_i_lesha_uebani[i]));
     }
 }
 
@@ -92,6 +116,7 @@ wxBEGIN_EVENT_TABLE(Okno, wxFrame)
     EVT_MENU(ID_Step, Okno::startProgram)
     EVT_MENU(ID_Dark, Okno::setDark)
     EVT_MENU(ID_About, Okno::showAbout)
+    EVT_MENU(ID_Open, Okno::openFile)
 wxEND_EVENT_TABLE()
 
 wxIMPLEMENT_APP(InitClass);

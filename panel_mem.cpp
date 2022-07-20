@@ -12,9 +12,9 @@ void MemPanel::setSurface() {
     table->SetMargins(0, -15);
     table->SetRowLabelAlignment(wxALIGN_RIGHT, wxALIGN_CENTRE);
     table->SetLabelFont(wxFont(13, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MAX, false, "Arial"));
-    table->SetLabelBackgroundColour(wxColour(44, 117, 255));
-    table->SetLabelTextColour(wxColour(255, 255, 255));
-    table->SetGridLineColour(wxColour(0, 0, 0));
+    table->SetLabelBackgroundColour(LINES_AND_LABELS_DEFAULT);
+    table->SetLabelTextColour(TEXT_LABEL_DEFAULT);
+    table->SetGridLineColour(LINES_AND_LABELS_DEFAULT);
 
     wxFont* font = new wxFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Courier New");
     char b[] = { '0', '0', '0', '0', '0', '0', '0', '0' };
@@ -32,6 +32,7 @@ void MemPanel::setSurface() {
             table->SetCellValue(i, j, wxString("00"));
             table->SetCellFont(i, j, *font);
             table->SetCellAlignment(i, j, wxALIGN_CENTRE, wxALIGN_CENTRE);
+            table->SetCellBackgroundColour(i, j, CELLS_DEFAULT);
         }
         table->SetRowLabelValue(i, wxString(std::string(b, sizeof(b) - 1) + "0"));
         b[6]++;
@@ -119,13 +120,13 @@ void MemPanel::denyResizeRow(wxGridSizeEvent& e) {
 
 
 
-void MemPanel::setTheme(const wxColour& label, const wxColour& cell, const wxColour& grid, const wxColour& text) {
+void MemPanel::setTheme(const wxColour& label, const wxColour& cell, const wxColour& grid, const wxColour& text, const wxColour& text_cell) {
     table->SetLabelBackgroundColour(label);
     table->SetLabelTextColour(text);
     for (int i = 0; i < table->GetNumberRows(); i++) {
         for (int j = 0; j < table->GetNumberCols(); j++) {
             table->SetCellBackgroundColour(i, j, cell);
-            table->SetCellTextColour(i, j, grid);
+            table->SetCellTextColour(i, j, text_cell);
         }
     }
     table->SetGridLineColour(grid);
@@ -134,8 +135,9 @@ void MemPanel::setTheme(const wxColour& label, const wxColour& cell, const wxCol
 
 
 void MemPanel::setValue(int i, int j, const std::string& str) {
-    if ((str.length() > 2) or (str.empty())) {return;}
-    table->SetCellValue(i, j, str);
+    if ((str.length() > 5) or (str.empty())) { return; }
+    if (str.length() == 1) table->SetCellValue(i, j, wxString("0" + str));
+    else table->SetCellValue(i, j, wxString(str));
 }
 
 
