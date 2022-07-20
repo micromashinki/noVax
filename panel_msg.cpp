@@ -1,4 +1,5 @@
 #include "panels.h"
+#include <wx/listbox.h>
 
 MsgPanel::MsgPanel(const wxSize& size) : wxPanel() {this->size = size;}
 
@@ -12,6 +13,8 @@ void MsgPanel::setSurface() {
 
 	wxPanel* panel = new wxPanel(this, wxID_ANY, wxPoint(0, 0), wxSize(GetWidth(), GetHeight()));
     panel->SetBackgroundColour(back);
+    wxListBox* list = new wxListBox(this, wxID_ANY, wxPoint(0,0), wxSize(GetWidth(), 100));
+
 }
 
 int MsgPanel::GetWidth() { return size.GetWidth(); }
