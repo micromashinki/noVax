@@ -38,7 +38,7 @@ int main()
 {
     Cprocessor pr;
     uint32_t ad = 0x0;
-    //pr.load("C:\\Users\\Chubr\\Desktop\\t2.v11");
+    pr.load("C:\\Users\\Chubr\\Desktop\\t2.v11");
     
     pr.step();
     drawProccessor(pr);

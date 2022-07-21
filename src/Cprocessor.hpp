@@ -487,8 +487,9 @@ private:
 
 	template<typename Type>
 	void brbw() {
-		Type op1 = get<Type>(registr[15]);
-		registr[15] += op1;
+		Type op1;
+		memory.get(registr[15], op1);
+		registr[15] += op1 + sizeof(Type);
 	}
 
 	template<typename Type>
@@ -544,6 +545,22 @@ public:
 
 	const Cflags& getFlags() {
 		return flag;
+	}
+
+	const bool getCFlag() {
+		return flag.C;
+	}
+
+	const bool getNFlag() {
+		return flag.N;
+	}
+
+	const bool getVFlag() {
+		return flag.V;
+	}
+
+	const bool getZFlag() {
+		return flag.Z;
 	}
 
 
