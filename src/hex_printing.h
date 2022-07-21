@@ -40,7 +40,7 @@ std::string int_to_hex_long_format(T i)
 	int val = i;
 	std::stringstream stream;
 	stream << "0x"
-		<< std::setfill('0') << std::setw(8)
+		<< std::setfill('0') << std::setw(8) << std::uppercase  
 		<< std::hex << val;
 	return stream.str();
 }

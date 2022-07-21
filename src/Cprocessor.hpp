@@ -17,7 +17,7 @@ class Cprocessor
 	Cflags flag;
 	Cmemory memory;
 	std::vector<uint32_t> registr;
-	
+
 public:
 	void load(const std::string& path) {
 		IniFile file;
@@ -31,6 +31,7 @@ public:
 		section = file.get("Memory");
 		end = section->get("dfghgfd");
 		for (int i = 0; i < SIZE_MEMORY; i += 16) {
+			auto gg = int_to_hex_long_format(i);
 			if (section->get(int_to_hex_long_format(i)) != end) {
 				std::string line = section->get(int_to_hex_long_format(i))->second;
 				for (int j = 0; j < 16; j++) {
@@ -518,8 +519,10 @@ public:
 		std::vector<uint32_t> changeCell;
 		std::string description;
 	};
+
 private:
 	SDescriptionLastCommand descriptionLastCommand;
+
 public:
 	const SDescriptionLastCommand& getStepDescription(){
 		return descriptionLastCommand;
