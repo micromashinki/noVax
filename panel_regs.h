@@ -9,7 +9,7 @@ public:
 	void checkValue(wxGridEvent&);
 	void denyResizeCol(wxGridSizeEvent&);
 	void denyResizeRow(wxGridSizeEvent&);
-	void setTheme(const wxColour&, const wxColour&, const wxColour&, const wxColour& text = wxColour(102, 255, 0));
+	void setTheme(const wxColour& back, const wxColour& label, const wxColour& cell, const wxColour& grid, const wxColour& text, const wxColour& labeck, const wxColour& texl);
 	void setValue(int i, const std::string& str);
 private:
 	wxSize size;
@@ -19,5 +19,15 @@ private:
 	wxTextCtrl* z_flag;
 	wxTextCtrl* v_flag;
 	wxTextCtrl* c_flag;
+	wxPanel* table_panel;
+	wxPanel* table2_panel;
+	wxPanel* separation_panel = NULL;
+	wxPanel* separation_panel2 = NULL;
+	wxPanel* separation_panel3 = NULL;
+	wxPanel* separation_panel4;
+	wxPanel* separation_panel5;
+	wxPanel* separation_panel6;
+	wxPanel* separation_panel7;
+	wxPanel* separation_panel8;
 	wxDECLARE_EVENT_TABLE();
 };

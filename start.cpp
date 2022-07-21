@@ -1,9 +1,10 @@
 ﻿#include "panels.h"
-#include "other/ini/ini.cpp"
+#include"ini-parser-master/ini.cpp"
 
 Cprocessor cp;
 MemPanel* mempanel;
 RegPanel* regpanel;
+
 MsgPanel* msgpanel;
 
 enum {
@@ -28,12 +29,12 @@ Okno::Okno(const wxString& str, const wxSize& s) : wxFrame (NULL, wxID_ANY, str,
     mempanel->Create(this, wxID_ANY, wxPoint(0, 0), wxSize(mempanel->GetWidth(), mempanel->GetHeight()));
     mempanel->setSurface();
 
-    regpanel = new RegPanel(wxSize((GetWidth() - GetWidth() / 1.5) - 26, GetHeight() - 250 - 5));
-    regpanel->Create(this, wxID_ANY, wxPoint((GetWidth() / 1.5) + 10, 0), wxSize(regpanel->GetWidth(), regpanel->GetHeight()));
+    regpanel = new RegPanel(wxSize((GetWidth() - GetWidth() / 1.5) - 26, GetHeight() - 250 ));
+    regpanel->Create(this, wxID_ANY, wxPoint((GetWidth() / 1.5) + 8, 0), wxSize(regpanel->GetWidth(), regpanel->GetHeight()));
     regpanel->setSurface();
 
-    msgpanel = new MsgPanel(wxSize(GetWidth() - 16, GetHeight() - (GetHeight() - 250) - 70));
-    msgpanel->Create(this, wxID_ANY, wxPoint(0, GetHeight() - 250 + 10), wxSize(msgpanel->GetWidth(), msgpanel->GetHeight()));
+    msgpanel = new MsgPanel(wxSize(GetWidth() - 16, GetHeight() - (GetHeight() - 250) - 66));
+    msgpanel->Create(this, wxID_ANY, wxPoint(0, GetHeight() - 250 + 6 ), wxSize(msgpanel->GetWidth(), msgpanel->GetHeight()));
     msgpanel->setSurface();
 
     menuFile = new wxMenu;
@@ -55,6 +56,7 @@ Okno::Okno(const wxString& str, const wxSize& s) : wxFrame (NULL, wxID_ANY, str,
     menuBar->Append(menuFile3, "Настройки");
     menuBar->Append(menuFile4, "Справка");
     SetMenuBar(menuBar);
+    SetBackgroundColour(LINES_AND_LABELS_DEFAULT);
 }
 
 int Okno::GetWidth() { return size.GetWidth(); }
@@ -62,16 +64,18 @@ int Okno::GetHeight() { return size.GetHeight();}
 
 void Okno::setDark(wxCommandEvent& e) {
     if (menuFile3->IsChecked(ID_Dark)) {
-        //(66, 163, 0) or (62, 183, 0)
-        msgpanel->setTheme(wxColour(30, 30, 30), wxColour(66, 163, 0));
-        mempanel->setTheme(wxColour(0, 0, 0), wxColour(30, 30, 30), wxColour(66, 163, 0), wxColour(66, 163, 0), wxColour(66, 163, 0));
-        Refresh();
+        //(66, 163, 0) or (62, 183, 0) SO_DARK
+        mempanel->setTheme(PANEL_DARK, SO_DARK, LINES_AND_LABELS_DEFAULT, LINES_AND_LABELS_DEFAULT, LINES_AND_LABELS_DEFAULT);
+        regpanel->setTheme(PANEL_DARK, PANEL_DEFAULT, SO_DARK, LINES_AND_LABELS_DEFAULT, PANEL_DARK, LINES_AND_LABELS_DEFAULT, LINES_AND_LABELS_DEFAULT);
+        msgpanel->setTheme(PANEL_DARK, LINES_AND_LABELS_DEFAULT);
+        SetBackgroundColour(LINES_AND_LABELS_DEFAULT);
     }
     else {
-        msgpanel->setTheme(PANEL_DEFAULT, TEXT_DEFAULT);
+       // regpanel->setTheme(wxColour(0, 0, 0), wxColour(0, 0, 0), wxColour(0, 0, 0), wxColour(0, 0, 0), wxColour(0, 0, 0), wxColour(0, 0, 0));
         mempanel->setTheme(LINES_AND_LABELS_DEFAULT, CELLS_DEFAULT, LINES_AND_LABELS_DEFAULT, TEXT_LABEL_DEFAULT, TEXT_DEFAULT);
-        Refresh();
-    }
+       regpanel->setTheme(PANEL_DEFAULT, LINES_AND_LABELS_DEFAULT, CELLS_DEFAULT, LINES_AND_LABELS_DEFAULT, TEXT_LABEL_DEFAULT, LINES_AND_LABELS_DEFAULT, TEXT_DEFAULT);
+       msgpanel->setTheme(PANEL_DEFAULT, TEXT_DEFAULT);
+    }Refresh();
 }
 
 void Okno::showAbout(wxCommandEvent& e) {
