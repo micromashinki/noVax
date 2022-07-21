@@ -1,19 +1,16 @@
 #include "panels.h"
-#include <wx/listbox.h>
 
 MsgPanel::MsgPanel(const wxSize& size) : wxPanel() {this->size = size;}
 
 
 void MsgPanel::setSurface() {
+    msg = new wxTextCtrl(this, wxID_ANY, "(null)", wxPoint(0, 0), size, wxTE_READONLY| wxTE_MULTILINE);
+    msg->SetFont(wxFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MAX, false, "Arial"));
+    msg->SetBackgroundColour(PANEL_DEFAULT);
+}
 
-    wxColor back = wxColor(210, 225, 255);
-    wxColor lines = wxColor(122, 189, 222);
-    wxColor cells = wxColor(230, 230, 250);
-    wxColor white = wxColor(255, 255, 255);
-
-	wxPanel* panel = new wxPanel(this, wxID_ANY, wxPoint(0, 0), wxSize(GetWidth(), GetHeight()));
-    panel->SetBackgroundColour(back);
-    wxListBox* list = new wxListBox(this, wxID_ANY, wxPoint(0,0), wxSize(GetWidth(), 100));
+void MsgPanel::setMessage(std::string str) {
+    msg->SetValue(wxString(str));
 
 }
 

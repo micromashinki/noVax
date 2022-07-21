@@ -6,6 +6,9 @@ public:
 
 	int GetWidth();
 	int GetHeight();
+
+	void setMessage(std::string);
 private:
 	wxSize size;
+	wxTextCtrl* msg;
 };
