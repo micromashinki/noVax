@@ -1,9 +1,9 @@
 ﻿#include "panels.h"
+#include "other/ini/ini.cpp"
 
 Cprocessor cp;
 MemPanel* mempanel;
 RegPanel* regpanel;
-SrchPanel* srchpanel;
 MsgPanel* msgpanel;
 
 enum {
@@ -63,10 +63,14 @@ int Okno::GetHeight() { return size.GetHeight();}
 void Okno::setDark(wxCommandEvent& e) {
     if (menuFile3->IsChecked(ID_Dark)) {
         //(66, 163, 0) or (62, 183, 0)
+        msgpanel->setTheme(wxColour(30, 30, 30), wxColour(66, 163, 0));
         mempanel->setTheme(wxColour(0, 0, 0), wxColour(30, 30, 30), wxColour(66, 163, 0), wxColour(66, 163, 0), wxColour(66, 163, 0));
+        Refresh();
     }
     else {
+        msgpanel->setTheme(PANEL_DEFAULT, TEXT_DEFAULT);
         mempanel->setTheme(LINES_AND_LABELS_DEFAULT, CELLS_DEFAULT, LINES_AND_LABELS_DEFAULT, TEXT_LABEL_DEFAULT, TEXT_DEFAULT);
+        Refresh();
     }
 }
 

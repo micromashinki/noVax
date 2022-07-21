@@ -8,6 +8,7 @@ public:
 	int GetHeight();
 
 	void setMessage(std::string);
+	void setTheme(const wxColour&, const wxColour&);
 private:
 	wxSize size;
 	wxTextCtrl* msg;

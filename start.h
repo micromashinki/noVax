@@ -3,7 +3,6 @@
 extern Cprocessor cp;
 extern MemPanel* mempanel;
 extern RegPanel* regpanel;
-extern SrchPanel* srchpanel;
 extern MsgPanel* msgpanel;
 
 class InitClass : public wxApp {
