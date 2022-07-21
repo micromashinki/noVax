@@ -18,7 +18,7 @@ void RegPanel::setSurface() {
     wxColor lines = wxColor(122, 189, 222);
     wxColor cells = wxColor(230, 230, 250);
     wxColor white = wxColor(255, 255, 255);
-    // bool const flags1 =  cp.getCFlag();
+    
     
     
 
@@ -32,10 +32,10 @@ void RegPanel::setSurface() {
     first_col = new wxGrid(table_panel, wxID_ANY, wxPoint(40, 75), wxSize(130, 208));
     sec_col = new wxGrid(table2_panel,  wxID_ANY,  wxPoint(40, 75), wxSize(130, 208));
 
-    wxTextCtrl* n_flag = new wxTextCtrl(this, wxID_ANY, "N = 0", wxPoint(40, 15), wxSize(50, 20), wxTE_READONLY);
-    wxTextCtrl* z_flag = new wxTextCtrl(this, wxID_ANY, "Z = 0", wxPoint(120, 15), wxSize(50, 20), wxTE_READONLY);
-    wxTextCtrl* v_flag = new wxTextCtrl(this, wxID_ANY, "V = 0", wxPoint(190, 15), wxSize(50, 20), wxTE_READONLY);
-    wxTextCtrl* c_flag = new wxTextCtrl(this, wxID_ANY, "C = 0", wxPoint(270, 15), wxSize(50, 20), wxTE_READONLY);
+     n_flag = new wxTextCtrl(this, wxID_ANY, "N = 0", wxPoint(40, 15), wxSize(50, 20), wxTE_READONLY);
+     z_flag = new wxTextCtrl(this, wxID_ANY, "Z = 0", wxPoint(120, 15), wxSize(50, 20), wxTE_READONLY);
+     v_flag = new wxTextCtrl(this, wxID_ANY, "V = 0", wxPoint(190, 15), wxSize(50, 20), wxTE_READONLY);
+     c_flag = new wxTextCtrl(this, wxID_ANY, "C = 0", wxPoint(270, 15), wxSize(50, 20), wxTE_READONLY);
 
     n_flag->SetBackgroundColour(cells);
     z_flag->SetBackgroundColour(cells);
@@ -166,7 +166,7 @@ void RegPanel::setValue(int i, const std::string& str) {
     z_flag->SetValue("Z = " + std::to_string(cp.getZFlag()));
     v_flag->SetValue("V = " + std::to_string(cp.getVFlag()));
     c_flag->SetValue("C = " + std::to_string(cp.getCFlag()));
-
+ 
 }
 
 
