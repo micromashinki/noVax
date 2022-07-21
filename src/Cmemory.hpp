@@ -25,15 +25,15 @@ public:
 	Cmemory() : memory(SIZE_MEMORY + 5, 0) {
 	}
 
-	void get(unsigned int index, uint8_t& dat) { dat = memory[index]; return; };
-	void get(unsigned int index, uint16_t& dat) {
+	void get(uint32_t index, uint8_t& dat) { dat = memory[index]; return; };
+	void get(uint32_t index, uint16_t& dat) {
 		dat = memory[index];
 		dat = dat << 8;
 		dat += memory[index + 1];
 		dat = ntohs(dat);
 	};
 
-	void get(unsigned int index, uint32_t& dat) {
+	void get(uint32_t index, uint32_t& dat) {
 		dat = memory[index];
 		dat = dat << 8;
 		dat += memory[index + 1];
@@ -47,15 +47,15 @@ public:
 	};
 
 
-	void set(unsigned int index, const uint8_t dat) { memory[index] = dat; };
+	void set(uint32_t index, const uint8_t dat) { memory[index] = dat; };
 
-	void set(unsigned int index, const uint16_t dat) {
+	void set(uint32_t index, const uint16_t dat) {
 		uint16_t tmp = htons(dat);
 		memory[index] = tmp >> 8;
 		memory[index + 1] = (uint8_t)tmp;
 	};
 
-	void set(unsigned int index, const uint32_t dat) {
+	void set(uint32_t index, const uint32_t dat) {
 		uint32_t tmp = htonl(dat);
 		memory[index + 3] = (uint8_t)tmp;
 		tmp = (uint32_t)tmp >> 8;

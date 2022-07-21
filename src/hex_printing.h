@@ -33,14 +33,21 @@ std::string int_to_hex(T i)
 	stream 	<< std::hex << std::uppercase << val;
 	return stream.str();
 }
+template <typename T>
+std::string int_to_hex_(T i)
+{
+	int val = i;
+	std::stringstream stream;
+	stream << std::hex << std::setfill('0') << std::uppercase << std::setw(2) << val;
+	return stream.str();
+}
 
 template <typename T>
 std::string int_to_hex_long_format(T i)
 {
 	int val = i;
 	std::stringstream stream;
-	stream << "0x"
-		<< std::setfill('0') << std::setw(8) << std::uppercase  
+	stream 	<< std::setfill('0') << std::setw(8) << std::uppercase  
 		<< std::hex << val;
 	return stream.str();
 }

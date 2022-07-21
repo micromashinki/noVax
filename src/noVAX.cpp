@@ -39,9 +39,31 @@ int main()
     Cprocessor pr;
     uint32_t ad = 0x0;
     pr.load("C:\\Users\\Chubr\\Desktop\\t2.v11");
+    pr.save("C:\\Users\\Chubr\\Desktop\\t3.v11");
     
     pr.step();
     drawProccessor(pr);
+
+    pr.step();
+    drawProccessor(pr);
+
+    pr.step();
+    drawProccessor(pr);
+
+    pr.step();
+    drawProccessor(pr);
+
+    pr.step();
+    drawProccessor(pr);
+    pr.step();
+    drawProccessor(pr);
+    pr.step();
+    drawProccessor(pr);
+    pr.step();
+    drawProccessor(pr);
+    pr.step();
+    drawProccessor(pr);
+
     //pr.setMemoryCell(ad++, 0xA0);
     //pr.setMemoryCell(ad++, 0x50);
     //pr.setMemoryCell(ad++, 0x51);
