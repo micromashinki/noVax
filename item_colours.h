@@ -4,8 +4,10 @@
 #define CELLS_DEFAULT wxColour(230, 230, 250)
 #define TEXT_DEFAULT wxColour(0, 0, 0)
 #define TEXT_LABEL_DEFAULT wxColour(255, 255, 255)
+#define SO_DARK  wxColour(0, 33, 55)
 
-//#define PANEL_DARK wxColour(15, 15, 15)
-//#define LINES_AND_TEXTS_DARK wxColour(66, 163, 0)
-//#define LABELS_DARK wxColour(0, 0, 0)
-//#define CELLS_DARK wxColour(30, 30, 30)
+#define PANEL_DARK wxColour(15, 0, 41)
+#define LINES_AND_TEXTS_DARK wxColour(66, 163, 0)
+#define LABELS_DARK wxColour(0, 0, 0)
+#define CELLS_DARK wxColour(30, 30, 30)
+
