@@ -18,7 +18,7 @@ void RegPanel::setSurface() {
     wxColor lines = wxColor(122, 189, 222);
     wxColor cells = wxColor(230, 230, 250);
     wxColor white = wxColor(255, 255, 255);
-     Cflags const flags1 = cp.getFlags();
+    // bool const flags1 =  cp.getCFlag();
     
     
 
@@ -131,12 +131,13 @@ void RegPanel::checkValue(wxGridEvent& e) {
     if (!invalid) {
         e.Veto();
         if (j == 0) {
-             first_col->SetCellValue(k, j, wxString(str));
+             first_col->SetCellValue(k, j, wxString(str) );
              cp.setRegisterCell(k, std::stoul(str.ToStdString(), 0, 16)); //work)))
         }
         else {
             sec_col->SetCellValue(k, j, wxString(str));
             cp.setRegisterCell(k + 8, std::stoul(str.ToStdString(), 0, 16));
+            
         }
     }
    
@@ -157,11 +158,15 @@ void RegPanel::denyResizeRow(wxGridSizeEvent& e) {
     e.Veto();
 }
 
-
 void RegPanel::setValue(int i, const std::string& str) {
     if ((str.length() > 2) or (str.empty())) { return; }
     if( i > 7) sec_col->SetCellValue(i-8, 1, str);
     else first_col->SetCellValue(i, 0, str);
+    n_flag->SetValue("N = " + std::to_string(cp.getNFlag()));
+    z_flag->SetValue("Z = " + std::to_string(cp.getZFlag()));
+    v_flag->SetValue("V = " + std::to_string(cp.getVFlag()));
+    c_flag->SetValue("C = " + std::to_string(cp.getCFlag()));
+
 }
 
 
