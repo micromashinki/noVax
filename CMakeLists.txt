@@ -3,7 +3,9 @@ project(q)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(wxWidgets_CONFIG_EXECUTABLE ../../wxWidgets-install/bin/wx-config)
+# Use wxWidgets_ROOT_DIR environment variable to find the wxWidgets config file
+set(wxWidgets_CONFIG_EXECUTABLE $ENV{wxWidgets_ROOT_DIR}/bin/wx-config)
+
 find_package(wxWidgets REQUIRED COMPONENTS net core base)
 
 if(wxWidgets_FOUND)
