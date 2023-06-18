@@ -3,7 +3,9 @@ project(q)
 
 set(CMAKE_CXX_STANDARD 14)
 
+set(wxWidgets_CONFIG_EXECUTABLE ../../wxWidgets-install/bin/wx-config)
 find_package(wxWidgets REQUIRED COMPONENTS net core base)
+
 if(wxWidgets_FOUND)
     include(${wxWidgets_USE_FILE})
 endif()
@@ -19,7 +21,6 @@ add_executable(q
         panel_msg.cpp
         panel_regs.cpp
         panels.h
-        panel_srch.h
         start.h
         )
 

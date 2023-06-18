@@ -1,0 +1,51 @@
+name: Smoke test
+
+on:
+  push:
+    branches: [ "GUI-cmake" ]
+  pull_request:
+    branches: [ "GUI-cmake" ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Cache wxwidgets
+      uses: actions/cache@v2
+      with:
+        path: |
+         wxWidgets
+         wxWidgets-install
+        key: ${{ runner.os }}-wxwidgets-${{ hashFiles('**/yml_file') }} # change yml_file to the path of this yml file
+
+    - name: Install wxwidgets
+      run: |
+        if [ -d wxWidgets ]; then 
+          echo "wxWidgets cache hit" 
+        else
+          sudo apt update &&
+          sudo apt install -y libgtk-3-dev &&
+          git clone https://github.com/wxWidgets/wxWidgets.git --depth 1 &&
+          cd wxWidgets/ &&
+          mkdir build-gtk &&
+          cd build-gtk &&
+          git submodule update --init --recursive &&
+          ../configure --prefix=${{github.workspace}}/wxWidgets-install &&
+          make -j 2 &&
+          make install 
+        fi
+
+    - name: Configure CMake
+      env:
+        wxWidgets_ROOT_DIR: ${{github.workspace}}/wxWidgets-install
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
