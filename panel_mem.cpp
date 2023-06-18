@@ -10,12 +10,14 @@ void MemPanel::setSurface() {
     table->SetRowLabelSize(85);
     table->SetColLabelSize(25);
     table->SetMargins(0, -15);
+    wxColor LINES_AND_LABELS_DEFAULT(122, 189, 222); // replace with your RGB values
+    wxColor TEXT_LABEL_DEFAULT(230, 230, 250); // replace with your RGB values
+
     table->SetRowLabelAlignment(wxALIGN_RIGHT, wxALIGN_CENTRE);
     table->SetLabelFont(wxFont(13, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MAX, false, "Arial"));
     table->SetLabelBackgroundColour(LINES_AND_LABELS_DEFAULT);
     table->SetLabelTextColour(TEXT_LABEL_DEFAULT);
     table->SetGridLineColour(LINES_AND_LABELS_DEFAULT);
-
     wxFont* font = new wxFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Courier New");
     char b[] = { '0', '0', '0', '0', '0', '0', '0', '0' };
     bool format = false;
@@ -32,7 +34,7 @@ void MemPanel::setSurface() {
             table->SetCellValue(i, j, wxString("00"));
             table->SetCellFont(i, j, *font);
             table->SetCellAlignment(i, j, wxALIGN_CENTRE, wxALIGN_CENTRE);
-            table->SetCellBackgroundColour(i, j, CELLS_DEFAULT);
+            table->SetCellBackgroundColour(i, j, wxS_DEFAULT);
         }
         table->SetRowLabelValue(i, wxString(std::string(b, sizeof(b) - 1) + "0"));
         b[6]++;

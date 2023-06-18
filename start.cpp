@@ -1,5 +1,6 @@
 ﻿#include "panels.h"
 #include"ini-parser-master/ini.cpp"
+#include <wx/filedlg.h>
 
 Cprocessor cp;
 MemPanel* mempanel;
@@ -38,23 +39,25 @@ Okno::Okno(const wxString& str, const wxSize& s) : wxFrame (NULL, wxID_ANY, str,
     msgpanel->setSurface();
 
     menuFile = new wxMenu;
-    menuFile->Append(ID_Open, "Открыть");
-    menuFile->Append(ID_Save, "Сохранить");
+    menuFile->Append(ID_Open, "Open");
+    menuFile->Append(ID_Save, "Save");
 
     menuFile2 = new wxMenu;
-    menuFile2->Append(ID_Step, "ПУСК");
+    menuFile2->Append(ID_Step, "Start");
 
     menuFile3 = new wxMenu;
-    menuFile3->AppendCheckItem(ID_Dark, "Тёмная тема");
+    menuFile3->AppendCheckItem(ID_Dark, "Dark");
 
     menuFile4 = new wxMenu;
-    menuFile4->Append(ID_About, "О программе");
+    menuFile4->Append(ID_About, "About");
+
+    wxColour LINES_AND_LABELS_DEFAULT(255, 255, 255); // define the color here
 
     wxMenuBar* menuBar = new wxMenuBar;
-    menuBar->Append(menuFile, "Файл");
-    menuBar->Append(menuFile2, "Отладка");
-    menuBar->Append(menuFile3, "Настройки");
-    menuBar->Append(menuFile4, "Справка");
+    menuBar->Append(menuFile, "File");
+    menuBar->Append(menuFile2, "Debug");
+    menuBar->Append(menuFile3, "Settings");
+    menuBar->Append(menuFile4, "About");
     SetMenuBar(menuBar);
     SetBackgroundColour(LINES_AND_LABELS_DEFAULT);
 }
@@ -63,6 +66,14 @@ int Okno::GetWidth() { return size.GetWidth(); }
 int Okno::GetHeight() { return size.GetHeight();}
 
 void Okno::setDark(wxCommandEvent& e) {
+    wxColour LINES_AND_LABELS_DEFAULT(0, 0, 0); // replace with actual RGB values
+    wxColour CELLS_DEFAULT(0, 0, 0); // replace with actual RGB values
+    wxColour TEXT_LABEL_DEFAULT(0, 0, 0); // replace with actual RGB values
+    wxColour TEXT_DEFAULT(0, 0, 0); // replace with actual RGB values
+    wxColour PANEL_DEFAULT(0, 0, 0); // replace with actual RGB values
+    wxColour PANEL_DARK(0, 0, 0); // replace with actual RGB values
+    wxColour SO_DARK(0, 0, 0); // replace with actual RGB values
+
     if (menuFile3->IsChecked(ID_Dark)) {
         //(66, 163, 0) or (62, 183, 0) SO_DARK
         mempanel->setTheme(PANEL_DARK, SO_DARK, LINES_AND_LABELS_DEFAULT, LINES_AND_LABELS_DEFAULT, LINES_AND_LABELS_DEFAULT);
