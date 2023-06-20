@@ -25,6 +25,21 @@ jobs:
          googleTest-install
         key: ${{ runner.os }}-wxwidgets-${{ hashFiles('**/yml_file') }} # change yml_file to the path of this yml file
 
+    - name: Install google test
+      run: |
+        if [ -d google-test-install ]; then 
+          echo "google-test cache hit" 
+        else
+          sudo apt update &&
+          git clone https://github.com/google/googletest.git  --depth 1 &&
+          cd googletest/ &&
+          mkdir build &&
+          cd build &&
+          cmake -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/googleTest-install ..  &&
+          make  -j 2 &&
+          make install 
+        fi
+        
     - name: Install wxwidgets
       run: |
         if [ -d wxWidgets-install ]; then 
@@ -39,21 +54,6 @@ jobs:
           git submodule update --init --recursive &&
           ../configure --prefix=${{github.workspace}}/wxWidgets-install &&
           make -j 2 &&
-          make install 
-        fi
-
-    - name: Install google test
-      run: |
-        if [ -d google-test-install ]; then 
-          echo "google-test cache hit" 
-        else
-          sudo apt update &&
-          git clone https://github.com/google/googletest.git  --depth 1 &&
-          cd googletest/ &&
-          mkdir build &&
-          cd build &&
-          cmake -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/googleTest-install ..  &&
-          make  -j 2 &&
           make install 
         fi
 
