@@ -27,8 +27,8 @@ jobs:
 
     - name: Install google test
       run: |
-        if [ -d google-test-install ]; then 
-          echo "google-test cache hit" 
+        if [ -d googleTest-install ]; then 
+          echo "googleTest-install cache hit" 
         else
           sudo apt update &&
           git clone https://github.com/google/googletest.git  --depth 1 &&
@@ -56,10 +56,6 @@ jobs:
           make -j 2 &&
           make install 
         fi
-
-    - name: ls -l
-      run: ls -l googleTest-install
-
 
     - name: Configure CMake GUI
       env:
