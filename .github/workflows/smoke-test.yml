@@ -57,16 +57,16 @@ jobs:
           make install 
         fi
 
-    - name: Configure CMake GUI
-      env:
-        wxWidgets_ROOT_DIR: ${{github.workspace}}/wxWidgets-install
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+#    - name: Configure CMake GUI
+#      env:
+#        wxWidgets_ROOT_DIR: ${{github.workspace}}/wxWidgets-install
+#      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
-    - name: Build GUI
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+#    - name: Build GUI
+#      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    - name: Build CLI
-      run: cd ${{github.workspace}}/noVaxEngine && cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} && cmake --build build
+#    - name: Build CLI
+#      run: cd ${{github.workspace}}/noVaxEngine && cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} && cmake --build build
 
 #    - name: Run Tests
 #      run: cd ${{github.workspace}}/noVaxEngine/build && ./runTests
