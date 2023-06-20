@@ -22,6 +22,7 @@ jobs:
       with:
         path: |
          wxWidgets-install
+         googleTest-install
         key: ${{ runner.os }}-wxwidgets-${{ hashFiles('**/yml_file') }} # change yml_file to the path of this yml file
 
     - name: Install wxwidgets
@@ -41,6 +42,21 @@ jobs:
           make install 
         fi
 
+    - name: Install google test
+      run: |
+        if [ -d google-test-install ]; then 
+          echo "google-test cache hit" 
+        else
+          sudo apt update &&
+          git clone https://github.com/google/googletest.git  --depth 1 &&
+          cd googletest/ &&
+          mkdir build &&
+          cd build &&
+          cmake -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/googleTest-install ..  &&
+          make  -j 2 &&
+          make install 
+        fi
+
     - name: Configure CMake GUI
       env:
         wxWidgets_ROOT_DIR: ${{github.workspace}}/wxWidgets-install
@@ -50,4 +66,8 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Build CLI
-      run: cd ${{github.workspace}}/noVaxEngine && cmake -B build   -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} && cmake --build build
+      run: cd ${{github.workspace}}/noVaxEngine && cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} && cmake --build build
+
+    - name: Run Tests
+      run: cd ${{github.workspace}}/noVaxEngine/build && ./runTests
+
