@@ -49,5 +49,5 @@ jobs:
     - name: Build GUI
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    #- name: Build CLI
-    #  run: cmake --build ${{github.workspace}}/noVaxEngine/build --config ${{env.BUILD_TYPE}}
+    - name: Build CLI
+      run: cmake --build ${{github.workspace}}/noVaxEngine/build --config ${{env.BUILD_TYPE}}
