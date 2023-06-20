@@ -21,13 +21,12 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-         wxWidgets
          wxWidgets-install
         key: ${{ runner.os }}-wxwidgets-${{ hashFiles('**/yml_file') }} # change yml_file to the path of this yml file
 
     - name: Install wxwidgets
       run: |
-        if [ -d wxWidgets ]; then 
+        if [ -d wxWidgets-install ]; then 
           echo "wxWidgets cache hit" 
         else
           sudo apt update &&
@@ -47,5 +46,9 @@ jobs:
         wxWidgets_ROOT_DIR: ${{github.workspace}}/wxWidgets-install
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
-    - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+    - name: Build GUI
+      run: cmake --build ${{github.workspace}}/noVaxEngine/build --config ${{env.BUILD_TYPE}}
+
+
+    - name: Build CLI
+      run: cmake --build ${{github.workspace}}/noVaxEngine/build --config ${{env.BUILD_TYPE}}

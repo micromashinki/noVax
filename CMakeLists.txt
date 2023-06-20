@@ -7,6 +7,7 @@ if(DEFINED ENV{wxWidgets_ROOT_DIR})
     set(wxWidgets_CONFIG_EXECUTABLE $ENV{wxWidgets_ROOT_DIR}/bin/wx-config)
 endif()
 
+set(my_variable "Hello, CMake!")
 find_package(wxWidgets REQUIRED COMPONENTS net core base)
 
 if(wxWidgets_FOUND)
@@ -26,5 +27,7 @@ add_executable(q
         panels.h
         start.h
         )
+add_subdirectory(noVaxEngine)
 
-target_link_libraries(q ${wxWidgets_LIBRARIES})
+target_link_libraries(q PRIVATE noVAXLib ${wxWidgets_LIBRARIES})
+
