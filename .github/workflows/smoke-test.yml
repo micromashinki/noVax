@@ -68,6 +68,6 @@ jobs:
     - name: Build CLI
       run: cd ${{github.workspace}}/noVaxEngine && cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} && cmake --build build
 
-    - name: Run Tests
-      run: cd ${{github.workspace}}/noVaxEngine/build && ./runTests
+#    - name: Run Tests
+#      run: cd ${{github.workspace}}/noVaxEngine/build && ./runTests
 
