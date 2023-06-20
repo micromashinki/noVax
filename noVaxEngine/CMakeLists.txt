@@ -6,6 +6,12 @@ set(CMAKE_CXX_STANDARD 20)
 add_library(noVAXLib STATIC ini-parser-master/ini.h ini-parser-master/ini.cpp)
 target_include_directories(noVAXLib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
+
+if(DEFINED ENV{googletest_ROOT_DIR})
+    set(GTEST_ROOT $ENV{googletest_ROOT_DIR})
+endif()
+
+
 if(NOT DEFINED AS_LIB)
     add_executable(noVAX-cli noVAX.cpp)
     target_link_libraries(noVAX-cli noVAXLib)

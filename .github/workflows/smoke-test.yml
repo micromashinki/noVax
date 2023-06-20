@@ -57,17 +57,23 @@ jobs:
           make install 
         fi
 
-#    - name: Configure CMake GUI
-#      env:
-#        wxWidgets_ROOT_DIR: ${{github.workspace}}/wxWidgets-install
-#      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+    - name: ls -l
+      run: ls -l googleTest-install
 
-#    - name: Build GUI
-#      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-#    - name: Build CLI
-#      run: cd ${{github.workspace}}/noVaxEngine && cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} && cmake --build build
+    - name: Configure CMake GUI
+      env:
+        wxWidgets_ROOT_DIR: ${{github.workspace}}/wxWidgets-install
+        googletest_ROOT_DIR: ${{github.workspace}}/googleTest-install
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
-#    - name: Run Tests
-#      run: cd ${{github.workspace}}/noVaxEngine/build && ./runTests
+    - name: Build GUI
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
+    - name: Build CLI
+      env:
+        googletest_ROOT_DIR: ${{github.workspace}}/googleTest-install
+      run: cd ${{github.workspace}}/noVaxEngine && cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} && cmake --build build
+
+    - name: Run Tests
+      run: cd ${{github.workspace}}/noVaxEngine/build && ./runTests
