@@ -1,5 +1,4 @@
 #include "panels.h"
-
 MemPanel::MemPanel(const wxSize& size) : wxPanel() {this->size = size;}
 
 void MemPanel::setSurface() {

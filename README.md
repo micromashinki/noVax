@@ -36,3 +36,14 @@ Before proceeding, make sure you have installed the following packages:
     
     # Install the project
     sudo make install
+##
+Windows Installation
+
+1) Установить clion
+2) Установить vcpkg
+3) Соеденить clion и vcpkg
+4) Установить chocolatey
+5) В консоли choco install mingw
+6) Зайти в настройки PATH и подвинуть путь до mingw на самый верх
+7) В консоли vcpkg install wxwidgets:x64-mingw-dynamic
+8) В clion поменять компилятор на mingw установленный через choco

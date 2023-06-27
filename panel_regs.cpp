@@ -1,5 +1,4 @@
 #include "panels.h"
-
      
 
 RegPanel::RegPanel(const wxSize& size) : wxPanel() {this->size = size;}
