@@ -49,8 +49,6 @@ void RegPanel::setSurface() {
     z_flag->SetBackgroundColour(cells);
     v_flag->SetBackgroundColour(cells);
     c_flag->SetBackgroundColour(cells);
-   
-    // цвет рамочки я не понял как поменять
 
     int rows = 8;
     int col = 2;
@@ -167,7 +165,7 @@ void RegPanel::denyResizeRow(wxGridSizeEvent& e) {
 }
 
 void RegPanel::setValue(int i, const std::string& str) {
-    if ((str.length() > 2) or (str.empty())) { return; }
+    if ((str.length() > 8) or (str.empty())) { return; }
     if( i > 7) sec_col->SetCellValue(i-8, 1, str);
     else first_col->SetCellValue(i, 0, str);
     n_flag->SetValue("N = " + std::to_string(cp.getNFlag()));

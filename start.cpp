@@ -51,7 +51,7 @@ Okno::Okno(const wxString& str, const wxSize& s) : wxFrame (NULL, wxID_ANY, str,
     menuFile4 = new wxMenu;
     menuFile4->Append(ID_About, "About");
 
-    wxColour LINES_AND_LABELS_DEFAULT(255, 255, 255); // define the color here
+
 
     wxMenuBar* menuBar = new wxMenuBar;
     menuBar->Append(menuFile, "File");
@@ -66,14 +66,6 @@ int Okno::GetWidth() { return size.GetWidth(); }
 int Okno::GetHeight() { return size.GetHeight();}
 
 void Okno::setDark(wxCommandEvent& e) {
-    wxColour LINES_AND_LABELS_DEFAULT(0, 0, 0); // replace with actual RGB values
-    wxColour CELLS_DEFAULT(0, 0, 0); // replace with actual RGB values
-    wxColour TEXT_LABEL_DEFAULT(0, 0, 0); // replace with actual RGB values
-    wxColour TEXT_DEFAULT(0, 0, 0); // replace with actual RGB values
-    wxColour PANEL_DEFAULT(0, 0, 0); // replace with actual RGB values
-    wxColour PANEL_DARK(0, 0, 0); // replace with actual RGB values
-    wxColour SO_DARK(0, 0, 0); // replace with actual RGB values
-
     if (menuFile3->IsChecked(ID_Dark)) {
         //(66, 163, 0) or (62, 183, 0) SO_DARK
         mempanel->setTheme(PANEL_DARK, SO_DARK, LINES_AND_LABELS_DEFAULT, LINES_AND_LABELS_DEFAULT, LINES_AND_LABELS_DEFAULT);
@@ -91,11 +83,12 @@ void Okno::setDark(wxCommandEvent& e) {
 
 void Okno::showAbout(wxCommandEvent& e) {
     std::string creators;
-    /*creators += "Создатели:\n";
+    creators += "Создатели:\n";
     creators += "Лёха-кабан\n";
     creators += "Душнильный менеджер говна (Жидкий)\n";
     creators += "Кислый\n";
-    creators += "Слабченко (Пивной сомелье)\n";*/
+    creators += "Слабченко (Пивной сомелье)\n";
+    creators += "Мшка\n";
     creators += "\n\n\t\t\t========(c) Micromashinki, 2022========";
     wxMessageBox(creators, "О программе");
 }

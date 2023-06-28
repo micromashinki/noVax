@@ -8,6 +8,7 @@
 #include <wx/msgdlg.h>
 #include <wx/tipdlg.h>
 #include <wx/textctrl.h>
+#include "item_colours.h"
 #include "panel_mem.h"
 #include "panel_srch.h"
 #include "panel_msg.h"

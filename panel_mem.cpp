@@ -1,4 +1,5 @@
 #include "panels.h"
+
 MemPanel::MemPanel(const wxSize& size) : wxPanel() {this->size = size;}
 
 void MemPanel::setSurface() {
@@ -9,8 +10,6 @@ void MemPanel::setSurface() {
     table->SetRowLabelSize(85);
     table->SetColLabelSize(25);
     table->SetMargins(0, -15);
-    wxColor LINES_AND_LABELS_DEFAULT(122, 189, 222); // replace with your RGB values
-    wxColor TEXT_LABEL_DEFAULT(230, 230, 250); // replace with your RGB values
 
     table->SetRowLabelAlignment(wxALIGN_RIGHT, wxALIGN_CENTRE);
     table->SetLabelFont(wxFont(13, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MAX, false, "Arial"));
