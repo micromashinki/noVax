@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "GUI-cmake" ]
+    branches: [ "*" ]
   pull_request:
-    branches: [ "GUI-cmake" ]
+    branches: [ "*" ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
