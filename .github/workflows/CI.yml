@@ -61,6 +61,7 @@ jobs:
     - name: Configure CMake GUI
       env:
         googletest_ROOT_DIR: ${{github.workspace}}/googleTest-install
+        wxWidgets_ROOT_DIR: ${{github.workspace}}/wxWidgets-install
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DwxWidgets_ROOT_DIR=${{github.workspace}}/wxWidgets-install -Dgoogletest_ROOT_DIR=${{github.workspace}}/googleTest-install
 
     - name: Build GUI

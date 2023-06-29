@@ -22,6 +22,10 @@ if(WIN32)
     find_package(OpenGL REQUIRED)
 endif()
 
+if(DEFINED ENV{wxWidgets_ROOT_DIR})
+    set(wxWidgets_CONFIG_EXECUTABLE $ENV{wxWidgets_ROOT_DIR}/bin/wx-config)
+endif()
+
 find_package(wxWidgets REQUIRED COMPONENTS net core base)
 
 if(wxWidgets_FOUND)
