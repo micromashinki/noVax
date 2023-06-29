@@ -1,0 +1,17 @@
+#pragma once
+#include <wx/app.h>
+#include <wx/frame.h>
+#include <wx/menu.h>
+#include <wx/panel.h>
+#include <wx/scrolbar.h>
+#include <wx/grid.h>
+#include <wx/msgdlg.h>
+#include <wx/tipdlg.h>
+#include <wx/textctrl.h>
+#include "item_colours.h"
+#include "panel_mem.h"
+#include "panel_srch.h"
+#include "panel_msg.h"
+#include "panel_regs.h"
+#include "../noVaxEngine/Cprocessor.hpp"
+#include "start.h"

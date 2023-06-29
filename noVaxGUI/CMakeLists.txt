@@ -16,7 +16,13 @@ add_executable(noVax-gui
         panel_msg.cpp
         panel_regs.cpp
         )
-add_subdirectory(noVaxEngine)
+
+
+set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../noVaxEngine")
+set(BINARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../noVaxEngine_binary")
+
+add_subdirectory(${SOURCE_DIR} ${BINARY_DIR})
+
 
 if(WIN32)
     find_package(OpenGL REQUIRED)
@@ -26,12 +32,13 @@ if(DEFINED ENV{wxWidgets_ROOT_DIR})
     set(wxWidgets_CONFIG_EXECUTABLE $ENV{wxWidgets_ROOT_DIR}/bin/wx-config)
 endif()
 
+
 find_package(wxWidgets REQUIRED COMPONENTS net core base)
 
 if(wxWidgets_FOUND)
     include(${wxWidgets_USE_FILE})
 endif()
 
-target_link_libraries(noVax-gui PRIVATE noVAXLib ${wxWidgets_LIBRARIES})
+target_link_libraries(noVax-gui PRIVATE noVAX-lib ${wxWidgets_LIBRARIES})
 
 

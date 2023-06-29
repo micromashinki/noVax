@@ -62,10 +62,10 @@ jobs:
       env:
         googletest_ROOT_DIR: ${{github.workspace}}/googleTest-install
         wxWidgets_ROOT_DIR: ${{github.workspace}}/wxWidgets-install
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DwxWidgets_ROOT_DIR=${{github.workspace}}/wxWidgets-install -Dgoogletest_ROOT_DIR=${{github.workspace}}/googleTest-install
+      run: cd noVaxGUI && cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DwxWidgets_ROOT_DIR=${{github.workspace}}/wxWidgets-install -Dgoogletest_ROOT_DIR=${{github.workspace}}/googleTest-install
 
     - name: Build GUI
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cd noVaxGUI && cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
 
     #- name: Build CLI
