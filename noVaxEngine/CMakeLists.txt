@@ -4,8 +4,11 @@ project(noVAX-lib)
 set(CMAKE_CXX_STANDARD 20)
 
 add_library(noVAX-lib STATIC ini-parser-master/ini.h ini-parser-master/ini.cpp)
-target_include_directories(noVAX-lib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(noVAX-lib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} )
 
+if(WIN32)
+    target_link_libraries(noVAX-lib ws2_32)
+endif ()
 
 if(DEFINED ENV{googletest_ROOT_DIR})
     set(GTEST_ROOT $ENV{googletest_ROOT_DIR})
