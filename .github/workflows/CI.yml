@@ -62,16 +62,21 @@ jobs:
       env:
         googletest_ROOT_DIR: ${{github.workspace}}/googleTest-install
         wxWidgets_ROOT_DIR: ${{github.workspace}}/wxWidgets-install
-      run: cd noVaxGUI && cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DwxWidgets_ROOT_DIR=${{github.workspace}}/wxWidgets-install -Dgoogletest_ROOT_DIR=${{github.workspace}}/googleTest-install
+      run: cd noVaxGUI && cmake -B ${{github.workspace}}/noVaxGUI/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DwxWidgets_ROOT_DIR=${{github.workspace}}/wxWidgets-install -Dgoogletest_ROOT_DIR=${{github.workspace}}/googleTest-install
 
     - name: Build GUI
-      run: cd noVaxGUI && cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cd noVaxGUI && cmake --build ${{github.workspace}}/noVaxGUI/build --config ${{env.BUILD_TYPE}}
+
+    - name: Configure CMake CLI
+      env:
+        googletest_ROOT_DIR: ${{github.workspace}}/googleTest-install
+      run: cd noVaxCLIDevTools && cmake -B ${{github.workspace}}/noVaxCLIDevTools/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dgoogletest_ROOT_DIR=${{github.workspace}}/googleTest-install
 
 
-    #- name: Build CLI
-    #  env:
-    #    googletest_ROOT_DIR: ${{github.workspace}}/googleTest-install
-    #  run: cd ${{github.workspace}}/noVaxEngine && cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} && cmake --build build
+    - name: Build CLI
+      env:
+        googletest_ROOT_DIR: ${{github.workspace}}/googleTest-install
+      run: cd noVaxCLIDevTools && cmake --build ${{github.workspace}}/noVaxCLIDevTools/build --config ${{env.BUILD_TYPE}}
 
-    #- name: Run Tests
-    #  run: cd ${{github.workspace}}/noVaxEngine/build && ./runTests
+    - name: Run Tests
+      run: cd ${{github.workspace}}/noVaxCLIDevTools/build && ./runTests
