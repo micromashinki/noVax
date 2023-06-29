@@ -9,5 +9,4 @@ set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../noVaxEngine")
 set(BINARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../noVaxEngine_binary")
 
 add_subdirectory(${SOURCE_DIR} ${BINARY_DIR})
-
 target_link_libraries(noVAX-cli PRIVATE noVAX-lib)
