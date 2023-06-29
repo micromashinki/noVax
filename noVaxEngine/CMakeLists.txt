@@ -11,6 +11,9 @@ if(DEFINED ENV{googletest_ROOT_DIR})
     set(GTEST_ROOT $ENV{googletest_ROOT_DIR})
 endif()
 
+message(STATUS "GTEST_ROOT: ${GTEST_ROOT}")
+
+
 
 if(NOT DEFINED AS_LIB)
     add_executable(noVAX-cli noVAX.cpp)
