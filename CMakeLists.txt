@@ -18,8 +18,16 @@ add_executable(noVax-gui
         )
 add_subdirectory(noVaxEngine)
 
-find_package(OpenGL)
-find_package(wxWidgets CONFIG REQUIRED)
-target_link_libraries(noVax-gui PRIVATE noVAXLib wx::core wx::base wx::gl)
+if(WIN32)
+    find_package(OpenGL REQUIRED)
+endif()
+
+find_package(wxWidgets REQUIRED COMPONENTS net core base)
+
+if(wxWidgets_FOUND)
+    include(${wxWidgets_USE_FILE})
+endif()
+
+target_link_libraries(noVax-gui PRIVATE noVAXLib ${wxWidgets_LIBRARIES})
 
 
