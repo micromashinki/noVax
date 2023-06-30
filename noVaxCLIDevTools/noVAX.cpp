@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include<iomanip>
 
-#include "Cprocessor.hpp"
+#include "../noVaxEngine/Cprocessor.hpp"
 
 void drawProccessor(Cprocessor& processor) {
     auto g = processor.getStepDescription();

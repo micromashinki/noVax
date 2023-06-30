@@ -3,10 +3,9 @@
 #define SIZE_MEMORY 1000000
 
 #ifdef _WIN32
-#include <winsock.h>
-#pragma comment(lib, "ws2_32.lib")
+    #include <winsock2.h>
 #else
-#include <arpa/inet.h>
+    #include <arpa/inet.h>
 #endif
 
 #pragma once

@@ -8,7 +8,7 @@
 #include "Cflags.h"
 #include "Cmemory.hpp"
 #include "ini-parser-master/ini.h"
-#include "../hex_printing.h"
+#include "../noVaxGUI/hex_printing.h"
 #include <cstdint>
 
 
