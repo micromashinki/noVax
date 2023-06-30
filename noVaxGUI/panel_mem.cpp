@@ -9,7 +9,7 @@ void MemPanel::setSurface() {
     table->CreateGrid(rows, col);
     table->SetRowLabelSize(85);
     table->SetColLabelSize(25);
-    table->SetMargins(100, -15);
+    table->SetMargins(0, -15);
 
     table->SetRowLabelAlignment(wxALIGN_RIGHT, wxALIGN_CENTRE);
     table->SetLabelFont(wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MAX, false, "Arial"));
