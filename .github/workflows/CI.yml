@@ -78,6 +78,9 @@ jobs:
         googletest_ROOT_DIR: ${{github.workspace}}/googleTest-install
       run: cd noVaxCLIDevTools && cmake --build ${{github.workspace}}/noVaxCLIDevTools/build --config ${{env.BUILD_TYPE}}
 
+    - name: Change permissions
+      run: chmod -R 777 ${{github.workspace}}/noVaxEngine/tests/file/Cprocessor_save_load/
+
     - name: List Test Files
       run: |
         ls -l ${{github.workspace}}/noVaxEngine/tests/file/Cprocessor_save_load/
