@@ -1,5 +1,4 @@
 ﻿#include "panels.h"
-#include "../noVaxEngine/ini-parser-master/ini.h"
 #include <wx/filedlg.h>
 
 Cprocessor cp;

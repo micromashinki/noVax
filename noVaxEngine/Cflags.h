@@ -9,4 +9,8 @@ public:
 	bool Z{ 0 };
 	bool N{ 0 };
 
+    bool operator==(const Cflags& other) const {
+        return C == other.C && V == other.V && Z == other.Z && N == other.N;
+    }
+
 };

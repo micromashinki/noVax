@@ -13,5 +13,5 @@
 #include "panel_srch.h"
 #include "panel_msg.h"
 #include "panel_regs.h"
-#include "../noVaxEngine/Cprocessor.hpp"
+#include "../noVaxEngine/Cprocessor.h"
 #include "start.h"
