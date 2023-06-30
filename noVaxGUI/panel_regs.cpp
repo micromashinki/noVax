@@ -49,6 +49,10 @@ void RegPanel::setSurface() {
     z_flag->SetBackgroundColour(cells);
     v_flag->SetBackgroundColour(cells);
     c_flag->SetBackgroundColour(cells);
+    n_flag->SetForegroundColour(TEXT_DEFAULT);
+    z_flag->SetForegroundColour(TEXT_DEFAULT);
+    v_flag->SetForegroundColour(TEXT_DEFAULT);
+    c_flag->SetForegroundColour(TEXT_DEFAULT);
 
     int rows = 8;
     int col = 2;
@@ -66,6 +70,7 @@ void RegPanel::setSurface() {
         first_col->SetRowLabelValue(i, wxString(_("R") + std::to_string(i)));
         first_col->SetCellAlignment(i, 0, wxALIGN_CENTRE, wxALIGN_CENTRE);
         first_col->SetCellValue(i, 0, wxString("00000000"));
+        first_col->SetCellTextColour(i, 0, TEXT_DEFAULT);
         
     }
     first_col->SetRowLabelSize (30);
@@ -91,6 +96,7 @@ void RegPanel::setSurface() {
         sec_col->SetRowLabelValue(i, wxString(_("R") + hex[i]));
         sec_col->SetCellAlignment(i, 1, wxALIGN_CENTRE, wxALIGN_CENTRE);
         sec_col->SetCellValue(i, 1, wxString("00000000"));
+        sec_col->SetCellTextColour(i, 1, TEXT_DEFAULT);
     }
     sec_col->SetRowLabelSize(30);
     sec_col->SetColSize(0, 0);

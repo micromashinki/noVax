@@ -9,10 +9,10 @@ void MemPanel::setSurface() {
     table->CreateGrid(rows, col);
     table->SetRowLabelSize(85);
     table->SetColLabelSize(25);
-    table->SetMargins(0, -15);
+    table->SetMargins(100, -15);
 
     table->SetRowLabelAlignment(wxALIGN_RIGHT, wxALIGN_CENTRE);
-    table->SetLabelFont(wxFont(13, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MAX, false, "Arial"));
+    table->SetLabelFont(wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MAX, false, "Arial"));
     table->SetLabelBackgroundColour(LINES_AND_LABELS_DEFAULT);
     table->SetLabelTextColour(TEXT_LABEL_DEFAULT);
     table->SetGridLineColour(LINES_AND_LABELS_DEFAULT);
@@ -32,7 +32,9 @@ void MemPanel::setSurface() {
             table->SetCellValue(i, j, wxString("00"));
             table->SetCellFont(i, j, *font);
             table->SetCellAlignment(i, j, wxALIGN_CENTRE, wxALIGN_CENTRE);
-            table->SetCellBackgroundColour(i, j, wxS_DEFAULT);
+            table->SetCellBackgroundColour(i, j, CELLS_DEFAULT);
+            table->SetCellTextColour(i, j, TEXT_DEFAULT);
+
         }
         table->SetRowLabelValue(i, wxString(std::string(b, sizeof(b) - 1) + "0"));
         b[6]++;
