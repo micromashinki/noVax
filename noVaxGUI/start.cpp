@@ -1,5 +1,4 @@
 ﻿#include "panels.h"
-#include "../noVaxEngine/ini-parser-master/ini.h"
 #include <wx/filedlg.h>
 
 Cprocessor cp;
@@ -25,7 +24,7 @@ bool InitClass::OnInit() {
 Okno::Okno(const wxString& str, const wxSize& s) : wxFrame (NULL, wxID_ANY, str, wxDefaultPosition, s) {
     size = s;
     SetMinSize(s);
-    SetMaxSize(s);
+    SetMaxSize(wxSize(1089+35, 700+54)); //kostyl, na winde budet koryavo mb
     mempanel = new MemPanel(wxSize(GetWidth() / 1.5, GetHeight() - 250));
     mempanel->Create(this, wxID_ANY, wxPoint(0, 0), wxSize(mempanel->GetWidth(), mempanel->GetHeight()));
     mempanel->setSurface();
@@ -83,7 +82,7 @@ void Okno::setDark(wxCommandEvent& e) {
 
 void Okno::showAbout(wxCommandEvent& e) {
     std::string creators;
-    creators += "Создатели:\n";
+    creators += "Creators:\n";
     creators += "Лёха-кабан\n";
     creators += "Душнильный менеджер говна (Жидкий)\n";
     creators += "Кислый\n";
@@ -115,17 +114,23 @@ void Okno::startProgram(wxCommandEvent& e) {
 }
 
 void Okno::openFile(wxCommandEvent& e) {
-    wxFileDialog* fd = new wxFileDialog(this, wxString("Open v11 file"), "", "", "*.v11|*.v11", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+    wxFileDialog* fd = new wxFileDialog(this, wxString("Open v11 file"), "", "", "*.*", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
     if (fd->ShowModal() == wxID_CANCEL) return;
     cp.load(fd->GetPath().ToStdString());
     std::vector<uint8_t> mem = cp.getMemory();
     for (int i = 0; i < (128 * 16); i++) {
         mempanel->setValue(i / 16, i % 16, int_to_hex(mem[i]));
     }
-    std::vector<uint32_t> sasha_i_lesha_uebani = cp.getRegister();
+    std::vector<uint32_t> fedya_ueban = cp.getRegister();
     for (int i = 0; i < 16; i++) {
-        regpanel->setValue(i, int_to_hex(sasha_i_lesha_uebani[i]));
+        regpanel->setValue(i, int_to_hex(fedya_ueban[i]));
     }
+}
+
+void Okno::saveFile(wxCommandEvent& e) {
+    wxFileDialog* fd = new wxFileDialog(this, wxString("Save v11 file"), "", "", "*.v11|*.v11", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+    if (fd->ShowModal() == wxID_CANCEL) return;
+    cp.save(fd->GetPath().ToStdString()); //hui znaet, rabotaet ili net
 }
 
 wxBEGIN_EVENT_TABLE(Okno, wxFrame)
@@ -133,6 +138,7 @@ wxBEGIN_EVENT_TABLE(Okno, wxFrame)
     EVT_MENU(ID_Dark, Okno::setDark)
     EVT_MENU(ID_About, Okno::showAbout)
     EVT_MENU(ID_Open, Okno::openFile)
+    EVT_MENU(ID_Save, Okno::saveFile)
 wxEND_EVENT_TABLE()
 
 wxIMPLEMENT_APP(InitClass);

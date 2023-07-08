@@ -21,6 +21,7 @@ public:
 	void startProgram(wxCommandEvent&);
 
 	void openFile(wxCommandEvent&);
+	void saveFile(wxCommandEvent&);
 private:
 	wxSize size;
 	

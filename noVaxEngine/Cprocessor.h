@@ -1,15 +1,16 @@
 ﻿#pragma once
 #include <iomanip>
 #include <iostream>
+
 #include <stdint.h>
 #include <string> 
 #include <fstream>
 
 #include "Cflags.h"
 #include "Cmemory.hpp"
-#include "ini-parser-master/ini.h"
 #include "../noVaxGUI/hex_printing.h"
 #include <cstdint>
+#include "inipp.h"
 
 
 
@@ -29,70 +30,23 @@ public:
 		std::string description;
 	};
 
+    bool operator==(const Cprocessor& other) const {
+        return flag == other.flag && memory == other.memory && registr == other.registr;
+    }
+
 private:
 	SDescriptionLastCommand descriptionLastCommand;
 public:
-	void load(const std::string& path) {
-		IniFile file;
-		file.open(path);
-		auto section = file.get("Registers");
-		auto end = section->get("dfghgfd");
-		for (int i = 0; i < 16; i++)
-			if (section->get("R" + int_to_hex(i)) != end)
-				registr[i] = std::stoul(section->get("R" + int_to_hex(i))->second, 0, 16);
 
-		section = file.get("Memory");
-		end = section->get("dfghgfd");
-		for (int i = 0; i < SIZE_MEMORY; i += 16) {
-			if (section->get("0x"+int_to_hex_long_format(i)) != end) {
-				std::string line = section->get("0x"+int_to_hex_long_format(i))->second;
-				for (int j = 0; j < 16; j++) {
-					auto ff = (uint8_t)std::stoul(line, 0, 16);
-					memory.set(i + j, (uint8_t)std::stoul(line, 0, 16));
+    void serFlags(bool N,bool Z,bool V,bool C){
+        flag.N = N;
+        flag.Z = Z;
+        flag.V = V;
+        flag.C = C;
+    }
+    void load(const std::string& path);
+	void save(const std::string& path);
 
-					if (line.length() > 3) {
-						line.erase(0, 3);
-					}
-
-				}
-
-			}
-		}
-	}
-	void save(const std::string& path) {
-		std::string file;
-		file+="[Registers]\n";
-		for (int i = 0; i < 16; i++) 
-			if (registr[i] != 0)
-				file += "R" + int_to_hex(i)+"=" + int_to_hex_long_format(registr[i])+"\n";
-
-
-		file += "[Memory]\n";
-		for (int i = 0; i < 10000; i += 16) {
-			bool flag = false;
-			uint8_t cell;
-			for (int j = 0; j < 16; j++) {
-				memory.get(i + j, cell);
-				if (cell != 0)
-					flag = true;
-			}
-			if (flag == true) {
-				std::string arg;
-				for (int j = 0; j < 16; j++,arg+=" ") {
-					memory.get(i + j, cell);
-					arg += int_to_hex_(cell);
-				}
-				file += "0x" + int_to_hex_long_format(i) +"="+arg + "\n";
-			}
-		}
-		
-		std::ofstream os(path);
-		if (os) {
-			os << file;
-			os.close();
-		}
-
-	}
 private:
 	template<typename Type>
 	Type get(const uint32_t& index, bool finalOperation = true) {

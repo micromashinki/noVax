@@ -17,12 +17,19 @@ protected:
 	std::vector<uint8_t> memory;
 
 public:
-	std::vector<uint8_t>& getMemory() {
-		return memory;
-	}
 
 	Cmemory() : memory(SIZE_MEMORY + 5, 0) {
 	}
+
+    bool operator==(const Cmemory& other) const {
+        bool res = memory == other.memory;
+        return res;
+    }
+
+    std::vector<uint8_t>& getMemory() {
+        return memory;
+    }
+
 
 	void get(uint32_t index, uint8_t& dat) { dat = memory[index]; return; };
 	void get(uint32_t index, uint16_t& dat) {
