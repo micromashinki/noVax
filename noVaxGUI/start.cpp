@@ -12,7 +12,8 @@ enum {
     ID_Dark = 2,
     ID_About = 3,
     ID_Open = 4,
-    ID_Save = 5
+    ID_Save = 5,
+    ID_Start = 6
 };
 
 bool InitClass::OnInit() {
@@ -42,7 +43,8 @@ Okno::Okno(const wxString& str, const wxSize& s) : wxFrame (NULL, wxID_ANY, str,
     menuFile->Append(ID_Save, "Save");
 
     menuFile2 = new wxMenu;
-    menuFile2->Append(ID_Step, "Start");
+    menuFile2->Append(ID_Start, "Start");
+    menuFile2->Append(ID_Step, "Step");
 
     menuFile3 = new wxMenu;
     menuFile3->AppendCheckItem(ID_Dark, "Dark");
@@ -54,7 +56,7 @@ Okno::Okno(const wxString& str, const wxSize& s) : wxFrame (NULL, wxID_ANY, str,
 
     wxMenuBar* menuBar = new wxMenuBar;
     menuBar->Append(menuFile, "File");
-    menuBar->Append(menuFile2, "Debug");
+    menuBar->Append(menuFile2, "Program");
     menuBar->Append(menuFile3, "Settings");
     menuBar->Append(menuFile4, "About");
     SetMenuBar(menuBar);
@@ -66,7 +68,7 @@ int Okno::GetHeight() { return size.GetHeight();}
 
 void Okno::setDark(wxCommandEvent& e) {
     if (menuFile3->IsChecked(ID_Dark)) {
-        //(66, 163, 0) or (62, 183, 0) SO_DARK
+        //(66, 163, 0) || (62, 183, 0) SO_DARK
         mempanel->setTheme(PANEL_DARK, SO_DARK, LINES_AND_LABELS_DEFAULT, LINES_AND_LABELS_DEFAULT, LINES_AND_LABELS_DEFAULT);
         regpanel->setTheme(PANEL_DARK, PANEL_DEFAULT, SO_DARK, LINES_AND_LABELS_DEFAULT, PANEL_DARK, LINES_AND_LABELS_DEFAULT, LINES_AND_LABELS_DEFAULT);
         msgpanel->setTheme(PANEL_DARK, LINES_AND_LABELS_DEFAULT);
@@ -92,7 +94,7 @@ void Okno::showAbout(wxCommandEvent& e) {
     wxMessageBox(creators, "О программе");
 }
 
-void Okno::startProgram(wxCommandEvent& e) {
+void Okno::makeStep(wxCommandEvent& e) {
     Cprocessor::SDescriptionLastCommand tmp;
     try {
         tmp = cp.step();
@@ -111,6 +113,24 @@ void Okno::startProgram(wxCommandEvent& e) {
         regpanel->setValue(i, int_to_hex(sasha_i_lesha_uebani[i]));
     }
     msgpanel->setMessage(desc);
+}
+
+void Okno::executeProgram(wxCommandEvent& e) {
+    //Cprocessor::SDescriptionLastCommand tmp;
+    //tut budet run
+    /*
+    std::vector<uint32_t> cells = tmp.changeCell;
+    std::string desc = tmp.description;
+    for (int i = 0; i < cells.size(); i++) {
+        int a = cells[i];
+        mempanel->setValue(a / 16, a % 16, int_to_hex(cp.getMemory()[a]));
+    }
+    std::vector<uint32_t> sasha_i_lesha_uebani= cp.getRegister();
+    for (int i = 0; i < 16; i++) {
+        regpanel->setValue(i, int_to_hex(sasha_i_lesha_uebani[i]));
+    }
+    msgpanel->setMessage(desc);
+    */
 }
 
 void Okno::openFile(wxCommandEvent& e) {
@@ -134,11 +154,12 @@ void Okno::saveFile(wxCommandEvent& e) {
 }
 
 wxBEGIN_EVENT_TABLE(Okno, wxFrame)
-    EVT_MENU(ID_Step, Okno::startProgram)
+    EVT_MENU(ID_Step, Okno::makeStep)
     EVT_MENU(ID_Dark, Okno::setDark)
     EVT_MENU(ID_About, Okno::showAbout)
     EVT_MENU(ID_Open, Okno::openFile)
     EVT_MENU(ID_Save, Okno::saveFile)
+    EVT_MENU(ID_Start, Okno::executeProgram)
 wxEND_EVENT_TABLE()
 
 wxIMPLEMENT_APP(InitClass);

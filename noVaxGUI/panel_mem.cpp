@@ -43,7 +43,7 @@ void MemPanel::setSurface() {
             b[6] = '0';
             short c = 5;
             bool perenos = true;
-            while ((c > 0) and perenos) {
+            while ((c > 0) && perenos) {
                 b[c]++;
                 if (b[c] > 'F') b[c] = '0';
                 else {
@@ -73,15 +73,15 @@ void MemPanel::checkValue(wxGridEvent& e) {
     wxString str = e.GetString();
     int k = e.GetRow();
     int j = e.GetCol();
-    if ((str.Length() > 2) or (str.IsEmpty())) {
+    if ((str.Length() > 2) || (str.IsEmpty())) {
         invalid = true;
         e.Veto();
     }
     else {
         for (int i = 0; i < (int)str.Length(); i++) {
-            if ((str[i] < '0') or (str[i] > '9')) {
-                if ((str[i] < 'A') or (str[i] > 'F')) {
-                    if ((str[i] < 'a') or (str[i] > 'f')) { 
+            if ((str[i] < '0') || (str[i] > '9')) {
+                if ((str[i] < 'A') || (str[i] > 'F')) {
+                    if ((str[i] < 'a') || (str[i] > 'f')) { 
                         e.Veto();
                         invalid = true;
                         break;
@@ -137,7 +137,7 @@ void MemPanel::setTheme(const wxColour& label, const wxColour& cell, const wxCol
 
 
 void MemPanel::setValue(int i, int j, const std::string& str) {
-    if ((str.length() > 5) or (str.empty())) { return; }
+    if ((str.length() > 5) || (str.empty())) { return; }
     if (str.length() == 1) table->SetCellValue(i, j, wxString("0" + str));
     else table->SetCellValue(i, j, wxString(str));
 }
