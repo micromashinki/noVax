@@ -341,6 +341,8 @@ private:
 		return;
 
 	}
+
+public:
 	template<typename Type>
 
 	Type add(Type op1, Type op2, bool flagC = 0) {
@@ -510,7 +512,7 @@ private:
 		memory.get(registr[15], op1);
 		registr[15] += op1 + sizeof(Type);
 	}
-
+private:
 	// говно решение, переделать 
 	// быстрый фикс для презентации 
 	template<typename Type>
