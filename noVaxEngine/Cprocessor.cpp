@@ -1,6 +1,8 @@
 //
 // Created by chubr on 30.06.23.
 //
+#include <stdexcept>
+
 #include "Cprocessor.h"
 
 void Cprocessor::load(const std::string& path) {
@@ -8,21 +10,38 @@ void Cprocessor::load(const std::string& path) {
 
     // read ini file
     std::ifstream is(path);
-    if (is) {
-        ini.parse(is);
-        is.close();
+    if (!is) {
+        throw std::runtime_error("Failed to open file: " + path);
+    }
+
+    ini.parse(is);
+    is.close();
+
+    // Check if sections are present
+    if (ini.sections.find("Registers") == ini.sections.end() ||
+        ini.sections.find("Memory") == ini.sections.end()) {
+        throw std::runtime_error("Missing required sections in ini file.");
     }
 
     // load registers
     auto &reg_section = ini.sections["Registers"];
 
-    std::string pslStr = ini.sections["Registers"]["PSL"];
-    uint64_t PSL = std::stoul(pslStr,0,16);
+    uint64_t PSL = 0; // Default value
+    auto psl_it = reg_section.find("PSL");
+    if (psl_it != reg_section.end()) {
+        std::string pslStr = psl_it->second;
+        try {
+            PSL = std::stoul(pslStr, 0, 16);
+        } catch (const std::invalid_argument& ia) {
+            throw std::runtime_error("Invalid value for PSL register.");
+        }
+    }
 
     flag.C = PSL & 0x1;
     flag.V = (PSL >> 1) & 0x1;
     flag.Z = (PSL >> 2) & 0x1;
     flag.N = (PSL >> 3) & 0x1;
+
 
     for (int i = 0; i < 16; i++) {
         auto it = reg_section.find("R" + int_to_hex(i));
