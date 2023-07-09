@@ -5,7 +5,7 @@
 #include "../Cprocessor.h"
 #include <cstdlib>
 
-typedef BYTE uint8_t;
+typedef uint8_t BYTE;
 
 template<typename T>
 void test_add() {
