@@ -6,6 +6,8 @@
 #include <cstdlib>
 
 typedef uint8_t BYTE;
+typedef uint16_t WORD;
+typedef unsigned long DWORD;
 
 template<typename T>
 void test_add() {
