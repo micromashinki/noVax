@@ -7,7 +7,7 @@
 
 typedef uint8_t BYTE;
 typedef uint16_t WORD;
-typedef unsigned long DWORD;
+typedef uint32_t dword;
 
 template<typename T>
 void test_add() {
@@ -19,7 +19,7 @@ void test_add() {
 TEST(Commands_add, add) {
     test_add<BYTE>();
     test_add<WORD>();
-    test_add<DWORD>();
+    test_add<dword>();
 }
 
 template<typename T>
@@ -32,7 +32,7 @@ void test_add_overflow() {
 TEST(Commands_add, overflow) {
     test_add_overflow<BYTE>();
     test_add_overflow<WORD>();
-    test_add_overflow<DWORD>();
+    test_add_overflow<dword>();
 }
 
 template<typename T>
@@ -45,7 +45,7 @@ void test_add_carry() {
 TEST(Commands_add, carry) {
     test_add_carry<BYTE>();
     test_add_carry<WORD>();
-    test_add_carry<DWORD>();
+    test_add_carry<dword>();
 }
 
 template<typename T>
@@ -58,7 +58,7 @@ void test_add_zero() {
 TEST(Commands_add, zero) {
     test_add_zero<BYTE>();
     test_add_zero<WORD>();
-    test_add_zero<DWORD>();
+    test_add_zero<dword>();
 }
 
 template<typename T>
@@ -71,7 +71,7 @@ void test_sub() {
 TEST(Commands_sub, sub) {
     test_sub<BYTE>();
     test_sub<WORD>();
-    test_sub<DWORD>();
+    test_sub<dword>();
 }
 
 template<typename T>
@@ -84,7 +84,7 @@ void test_sub_overflow() {
 TEST(Commands_sub, overflow) {
     test_sub_overflow<BYTE>();
     test_sub_overflow<WORD>();
-    test_sub_overflow<DWORD>();
+    test_sub_overflow<dword>();
 }
 
 template<typename T>
@@ -97,5 +97,5 @@ void test_sub_zero() {
 TEST(Commands_sub, zero) {
     test_sub_zero<BYTE>();
     test_sub_zero<WORD>();
-    test_sub_zero<DWORD>();
+    test_sub_zero<dword>();
 }
