@@ -368,3 +368,4 @@ out/
 cmake-build-debug-mingw/
 cmake-build-release/
 .idea
+noVaxEngine_binary
