@@ -17,7 +17,8 @@ void Cprocessor::load(const std::string& path) {
     auto &reg_section = ini.sections["Registers"];
 
     std::string pslStr = ini.sections["Registers"]["PSL"];
-    uint64_t PSL = std::stoul(pslStr,0,16);
+    uint64_t PSL = 0;
+    if (!pslStr.empty()) PSL = std::stoul(pslStr,0,16);
 
     flag.C = PSL & 0x1;
     flag.V = (PSL >> 1) & 0x1;
