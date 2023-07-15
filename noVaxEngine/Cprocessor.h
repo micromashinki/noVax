@@ -50,25 +50,25 @@ public:
 private:
 	template<typename Type>
 	Type get(const uint32_t& index, bool finalOperation = true) {
-		uint8_t typeAdress;
-		memory.get(index, typeAdress);
+		uint8_t typeAddress;
+		memory.get(index, typeAddress);
 
 		descriptionLastCommand.description += "get value: ";
 
-		auto h = typeAdress & 0xF0;
+		auto h = typeAddress & 0xF0;
 		if (h == 0x50) {
-			descriptionLastCommand.description += "5X adress R" + int_to_hex(typeAdress - 0x50) + " value : " + int_to_hex(registr[typeAdress - 0x50]) + "\n";
+			descriptionLastCommand.description += "5X address R" + int_to_hex(typeAddress - 0x50) + " value : " + int_to_hex(registr[typeAddress - 0x50]) + "\n";
 			if (finalOperation)
 				registr[15] += 1;
-			return registr[typeAdress - 0x50];
+			return registr[typeAddress - 0x50];
 		}
 
 		if (h == 0x60) {
 			if (finalOperation)
 				registr[15] += 1;
 			Type dat;
-			memory.get(registr[typeAdress - 0x60], dat);
-			descriptionLastCommand.description += "6X adress MEM" + int_to_hex(registr[typeAdress - 0x60]) + " value : "+ int_to_hex(dat) + "\n";
+			memory.get(registr[typeAddress - 0x60], dat);
+			descriptionLastCommand.description += "6X address MEM" + int_to_hex(registr[typeAddress - 0x60]) + " value : "+ int_to_hex(dat) + "\n";
 			return dat;
 		}
 
@@ -76,32 +76,33 @@ private:
 			Type dat;
 			if (finalOperation) {
 				registr[15] += 1;
-				registr[typeAdress - 0x70] -= sizeof(Type);
+				registr[typeAddress - 0x70] -= sizeof(Type);
 			}
-			memory.get(registr[typeAdress - 0x70], dat);
-			descriptionLastCommand.description += "7X adress MEM" + int_to_hex(registr[typeAdress - 0x70]) + " value : " + int_to_hex(dat) + "\n";
+            auto qq = registr[typeAddress - 0x70];
+			memory.get(registr[typeAddress - 0x70], dat);
+			descriptionLastCommand.description += "7X address MEM" + int_to_hex(registr[typeAddress - 0x70]) + " value : " + int_to_hex(dat) + "\n";
 			return dat;
 		}
 
 		if (h == 0x80) {
 			Type dat;
-			memory.get(registr[typeAdress - 0x80], dat);
-			descriptionLastCommand.description += "8X adress MEM" + int_to_hex(registr[typeAdress - 0x80]) + " value : " + int_to_hex(dat) + "\n";
+			memory.get(registr[typeAddress - 0x80], dat);
+			descriptionLastCommand.description += "8X address MEM" + int_to_hex(registr[typeAddress - 0x80]) + " value : " + int_to_hex(dat) + "\n";
 			if (finalOperation) {
 				registr[15] += 1;
-				registr[typeAdress - 0x80] += sizeof(Type);
+				registr[typeAddress - 0x80] += sizeof(Type);
 			}
 			return dat;
 		}
 
 		if (h == 0x90) {
 			Type dat;
-			memory.get(registr[typeAdress - 0x90], dat);
+			memory.get(registr[typeAddress - 0x90], dat);
 			memory.get(dat, dat);
-			descriptionLastCommand.description += "9X adress MEM" + int_to_hex(registr[typeAdress - 0x90]) + " value : " + int_to_hex(dat) + "\n";
+			descriptionLastCommand.description += "9X address MEM" + int_to_hex(registr[typeAddress - 0x90]) + " value : " + int_to_hex(dat) + "\n";
 			if (finalOperation) {
 				registr[15] += 1;
-				registr[typeAdress - 0x90] += 4;
+				registr[typeAddress - 0x90] += 4;
 			}
 			return dat;
 		}
@@ -109,11 +110,11 @@ private:
 		if (h == 0xA0) {
 			uint8_t dat;
 			Type data;
-			memory.get(registr[typeAdress - 0xA0] + 1, dat);
-			memory.get(dat + registr[typeAdress - 0xA0] + 2, data);
+			memory.get(registr[typeAddress - 0xA0] + 1, dat);
+			memory.get(dat + registr[typeAddress - 0xA0] + 2, data);
 			descriptionLastCommand.description += "0xA0 new value : " + int_to_hex(data) + "\n";
 			if (finalOperation) {
-				registr[typeAdress - 0xA0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xA0] += sizeof(dat) + 1;
 			}
 			return data;
 		}
@@ -121,11 +122,11 @@ private:
 		if (h == 0xC0) {
 			uint16_t dat;
 			Type data;
-			memory.get(registr[typeAdress - 0xC0] + 1, dat);
-			memory.get(dat + registr[typeAdress - 0xC0] + 3, data);
+			memory.get(registr[typeAddress - 0xC0] + 1, dat);
+			memory.get(dat + registr[typeAddress - 0xC0] + 3, data);
 			descriptionLastCommand.description += "0xC0 new value : " + int_to_hex(data) + "\n";
 			if (finalOperation) {
-				registr[typeAdress - 0xC0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xC0] += sizeof(dat) + 1;
 			}
 			return data;
 		}
@@ -133,11 +134,11 @@ private:
 		if (h == 0xE0) {
 			uint32_t dat;
 			Type data;
-			memory.get(registr[typeAdress - 0xE0] + 1, dat);
-			memory.get(dat + registr[typeAdress - 0xE0] + 5, data);
+			memory.get(registr[typeAddress - 0xE0] + 1, dat);
+			memory.get(dat + registr[typeAddress - 0xE0] + 5, data);
 			descriptionLastCommand.description += "0xE0 new value : " + int_to_hex(data) + "\n";
 			if (finalOperation) {
-				registr[typeAdress - 0xE0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xE0] += sizeof(dat) + 1;
 			}
 			return data;
 		}
@@ -145,13 +146,13 @@ private:
 		if (h == 0xB0) {
 			uint8_t dat;
 			Type data;
-			uint32_t adress;
-			memory.get(registr[typeAdress - 0xB0] + 1, dat);
-			memory.get(dat + registr[typeAdress - 0xB0] + 2, adress);
-			memory.get(adress, data);
+			uint32_t address;
+			memory.get(registr[typeAddress - 0xB0] + 1, dat);
+			memory.get(dat + registr[typeAddress - 0xB0] + 2, address);
+			memory.get(address, data);
 			descriptionLastCommand.description += "0xB0 new value : " + int_to_hex(data) + "\n";
 			if (finalOperation) {
-				registr[typeAdress - 0xB0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xB0] += sizeof(dat) + 1;
 			}
 			return data;
 		}
@@ -159,13 +160,13 @@ private:
 		if (h == 0xD0) {
 			uint16_t dat;
 			Type data;
-			uint32_t adress;
-			memory.get(registr[typeAdress - 0xD0] + 1, dat);
-			memory.get(dat + registr[typeAdress - 0xD0] + 3, adress);
-			memory.get(adress, data);
+			uint32_t address;
+			memory.get(registr[typeAddress - 0xD0] + 1, dat);
+			memory.get(dat + registr[typeAddress - 0xD0] + 3, address);
+			memory.get(address, data);
 			descriptionLastCommand.description += "0xD0 new value : " + int_to_hex(data) + "\n";
 			if (finalOperation) {
-				registr[typeAdress - 0xD0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xD0] += sizeof(dat) + 1;
 			}
 			return data;
 		}
@@ -173,13 +174,13 @@ private:
 		if (h == 0xF0) {
 			uint32_t dat;
 			Type data;
-			uint32_t adress;
-			memory.get(registr[typeAdress - 0xF0] + 1, dat);
-			memory.get(dat + registr[typeAdress - 0xF0] + 5, adress);
-			memory.get(adress, data);
+			uint32_t address;
+			memory.get(registr[typeAddress - 0xF0] + 1, dat);
+			memory.get(dat + registr[typeAddress - 0xF0] + 5, address);
+			memory.get(address, data);
 			descriptionLastCommand.description += "0xF0 new value : " + int_to_hex(data) + "\n";
 			if (finalOperation) {
-				registr[typeAdress - 0xF0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xF0] += sizeof(dat) + 1;
 			}
 			return data;
 		}
@@ -190,56 +191,56 @@ private:
 
 	template<typename Type>
 	void set(const uint32_t index, const Type value, bool finalOperation = true) {
-		uint8_t typeAdress;
-		memory.get(index, typeAdress);
+		uint8_t typeAddress;
+		memory.get(index, typeAddress);
 		bool flag = false;
-		auto h = typeAdress & 0xF0;
+		auto h = typeAddress & 0xF0;
 		descriptionLastCommand.description += "set value: ";
 
 		if (h == 0x50) {
 			if (finalOperation)
 				registr[15] += 1;
 
-			//registr[typeAdress - 0x50] = (uint32_t)value & (registr[typeAdress - 0x50] | ~registr[typeAdress - 0x50]);  //X2 ∧ (X1 ∨ !X1)
-			registr[typeAdress - 0x50] = value;
-			descriptionLastCommand.description += "5X adress R" + int_to_hex(typeAdress - 0x50) + " new value : " + int_to_hex(registr[typeAdress - 0x50]) + "\n";
+			//registr[typeAddress - 0x50] = (uint32_t)value & (registr[typeAddress - 0x50] | ~registr[typeAddress - 0x50]);  //X2 ∧ (X1 ∨ !X1)
+			registr[typeAddress - 0x50] = value;
+			descriptionLastCommand.description += "5X address R" + int_to_hex(typeAddress - 0x50) + " new value : " + int_to_hex(registr[typeAddress - 0x50]) + "\n";
 			flag = true;
 		}
 
 		if (h == 0x60) {
 			if (finalOperation)
 				registr[15] += 1;
-			memory.set(registr[typeAdress - 0x60], value);
-			for (int i = 0; i < sizeof(Type); i++) { descriptionLastCommand.changeCell.push_back(registr[typeAdress - 0x60] + i); }
+			memory.set(registr[typeAddress - 0x60], value);
+			for (int i = 0; i < sizeof(Type); i++) { descriptionLastCommand.changeCell.push_back(registr[typeAddress - 0x60] + i); }
 
 			Type dat;
-			memory.get(registr[typeAdress - 0x60], dat);
-			descriptionLastCommand.description += "6X adress MEM" + int_to_hex(registr[typeAdress - 0x60]) + " new value : " + int_to_hex(dat) + "\n";
+			memory.get(registr[typeAddress - 0x60], dat);
+			descriptionLastCommand.description += "6X address MEM" + int_to_hex(registr[typeAddress - 0x60]) + " new value : " + int_to_hex(dat) + "\n";
 			flag = true;
 		}
 
 		if (h == 0x70) {
 			if (finalOperation) {
 				registr[15] += 1;
-				registr[typeAdress - 0x70] -= sizeof(Type);
+				registr[typeAddress - 0x70] -= sizeof(Type);
 			}
-			memory.set(registr[typeAdress - 0x70], value);
-			for (int i = 0; i < sizeof(Type); i++) { descriptionLastCommand.changeCell.push_back(registr[typeAdress - 0x70] + i); }
+			memory.set(registr[typeAddress - 0x70], value);
+			for (int i = 0; i < sizeof(Type); i++) { descriptionLastCommand.changeCell.push_back(registr[typeAddress - 0x70] + i); }
 
 			Type dat;
-			memory.get(registr[typeAdress - 0x70], dat);
-			descriptionLastCommand.description += "7X adress MEM" + int_to_hex(registr[typeAdress - 0x70]) + " new value : " + int_to_hex(dat) + "\n";
+			memory.get(registr[typeAddress - 0x70], dat);
+			descriptionLastCommand.description += "7X address MEM" + int_to_hex(registr[typeAddress - 0x70]) + " new value : " + int_to_hex(dat) + "\n";
 			flag = true;
 		}
 
 		if (h == 0x80) {
-			memory.set(registr[typeAdress - 0x80], value);
-			for (int i = 0; i < sizeof(Type); i++) { descriptionLastCommand.changeCell.push_back(registr[typeAdress - 0x80] + i); }
+			memory.set(registr[typeAddress - 0x80], value);
+			for (int i = 0; i < sizeof(Type); i++) { descriptionLastCommand.changeCell.push_back(registr[typeAddress - 0x80] + i); }
 			Type dat;
-			memory.get(registr[typeAdress - 0x80], dat);
-			descriptionLastCommand.description += "8X adress MEM" + int_to_hex(registr[typeAdress - 0x80]) + " new value : " + int_to_hex(dat) + "\n";
+			memory.get(registr[typeAddress - 0x80], dat);
+			descriptionLastCommand.description += "8X address MEM" + int_to_hex(registr[typeAddress - 0x80]) + " new value : " + int_to_hex(dat) + "\n";
 			if (finalOperation) {
-				registr[typeAdress - 0x80] += sizeof(Type);
+				registr[typeAddress - 0x80] += sizeof(Type);
 				registr[15] += 1;
 			}
 			flag = true;
@@ -247,49 +248,49 @@ private:
 
 		if (h == 0x90) {
 			Type dat;
-			uint32_t adress;
-			memory.get(registr[typeAdress - 0x90], adress);
-			memory.set(adress, value);
-			for (int i = 0; i < sizeof(Type); i++) { descriptionLastCommand.changeCell.push_back(adress + i); }
-			memory.get(registr[typeAdress - 0x90], dat);
+			uint32_t address;
+			memory.get(registr[typeAddress - 0x90], address);
+			memory.set(address, value);
+			for (int i = 0; i < sizeof(Type); i++) { descriptionLastCommand.changeCell.push_back(address + i); }
+			memory.get(registr[typeAddress - 0x90], dat);
 			memory.get(dat, dat);
-			descriptionLastCommand.description += "9X adress MEM" + int_to_hex(registr[typeAdress - 0x90]) + " new value : " + int_to_hex(dat) + "\n";
+			descriptionLastCommand.description += "9X address MEM" + int_to_hex(registr[typeAddress - 0x90]) + " new value : " + int_to_hex(dat) + "\n";
 			if (finalOperation) {
 				registr[15] += 1;
-				registr[typeAdress - 0x90] += 4;
+				registr[typeAddress - 0x90] += 4;
 			}
 			flag = true;
 		}
 
 		if (h == 0xA0) {
 			uint8_t dat;
-			memory.get(registr[typeAdress - 0xA0] + 1, dat);
-			memory.set(dat + registr[typeAdress - 0xA0] + 2, value);
+			memory.get(registr[typeAddress - 0xA0] + 1, dat);
+			memory.set(dat + registr[typeAddress - 0xA0] + 2, value);
 			descriptionLastCommand.description += "0xA0 new value : " + int_to_hex(value) + "\n";
 			if (finalOperation) {
-				registr[typeAdress - 0xA0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xA0] += sizeof(dat) + 1;
 			}
 			flag = true;
 		}
 
 		if (h == 0xC0) {
 			uint16_t dat;
-			memory.get(registr[typeAdress - 0xC0] + 1, dat);
-			memory.set(dat + registr[typeAdress - 0xC0] + 3, value);
+			memory.get(registr[typeAddress - 0xC0] + 1, dat);
+			memory.set(dat + registr[typeAddress - 0xC0] + 3, value);
 			descriptionLastCommand.description += "0xC0 new value : " + int_to_hex(value) + "\n";
 			if (finalOperation) {
-				registr[typeAdress - 0xC0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xC0] += sizeof(dat) + 1;
 			}
 			flag = true;
 		}
 
 		if (h == 0xE0) {
 			uint32_t dat;
-			memory.get(registr[typeAdress - 0xE0] + 1, dat);
-			memory.set(dat + registr[typeAdress - 0xE0] + 5, value);
+			memory.get(registr[typeAddress - 0xE0] + 1, dat);
+			memory.set(dat + registr[typeAddress - 0xE0] + 5, value);
 			descriptionLastCommand.description += "0xE0 new value : " + int_to_hex(value) + "\n";
 			if (finalOperation) {
-				registr[typeAdress - 0xE0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xE0] += sizeof(dat) + 1;
 			}
 			flag = true;
 		}
@@ -297,13 +298,13 @@ private:
 		if (h == 0xB0) {
 			uint8_t dat;
 			Type data;
-			uint32_t adress;
-			memory.get(registr[typeAdress - 0xB0] + 1, dat);
-			memory.get(dat + registr[typeAdress - 0xB0] + 2, adress);
-			memory.set(adress, value);
+			uint32_t address;
+			memory.get(registr[typeAddress - 0xB0] + 1, dat);
+			memory.get(dat + registr[typeAddress - 0xB0] + 2, address);
+			memory.set(address, value);
 			descriptionLastCommand.description += "0xB0 new value : " + int_to_hex(value) + "\n";
 			if (finalOperation) {
-				registr[typeAdress - 0xB0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xB0] += sizeof(dat) + 1;
 			}
 			flag = true;
 		}
@@ -311,13 +312,13 @@ private:
 		if (h == 0xD0) {
 			uint16_t dat;
 			Type data;
-			uint32_t adress;
-			memory.get(registr[typeAdress - 0xD0] + 1, dat);
-			memory.get(dat + registr[typeAdress - 0xD0] + 3, adress);
-			memory.set(adress, value);
+			uint32_t address;
+			memory.get(registr[typeAddress - 0xD0] + 1, dat);
+			memory.get(dat + registr[typeAddress - 0xD0] + 3, address);
+			memory.set(address, value);
 			descriptionLastCommand.description += "0xD0 new value : " + int_to_hex(value) + "\n";
 			if (finalOperation) {
-				registr[typeAdress - 0xD0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xD0] += sizeof(dat) + 1;
 			}
 			flag = true;
 		}
@@ -325,13 +326,13 @@ private:
 		if (h == 0xF0) {
 			uint32_t dat;
 			Type data;
-			uint32_t adress;
-			memory.get(registr[typeAdress - 0xF0] + 1, dat);
-			memory.get(dat + registr[typeAdress - 0xF0] + 5, adress);
-			memory.set(adress, value);
+			uint32_t address;
+			memory.get(registr[typeAddress - 0xF0] + 1, dat);
+			memory.get(dat + registr[typeAddress - 0xF0] + 5, address);
+			memory.set(address, value);
 			descriptionLastCommand.description += "0xF0 new value : " + int_to_hex(value) + "\n";
 			if (finalOperation) {
-				registr[typeAdress - 0xF0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xF0] += sizeof(dat) + 1;
 			}
 			flag = true;
 		}
@@ -517,48 +518,48 @@ private:
 	// быстрый фикс для презентации 
 	template<typename Type>
 	uint32_t getPhysicalAddress(const uint32_t& index, bool finalOperation = true) {
-		uint8_t typeAdress;
-		memory.get(index, typeAdress);
+		uint8_t typeAddress;
+		memory.get(index, typeAddress);
 
 		descriptionLastCommand.description += "get value: ";
 
-		auto h = typeAdress & 0xF0;
+		auto h = typeAddress & 0xF0;
 
 		if (h == 0x60) {
 			if (finalOperation)
 				registr[15] += 1;
 			
-			descriptionLastCommand.description += "6X adress MEM" + std::to_string(registr[typeAdress - 0x60]) + "\n";
-			return registr[typeAdress - 0x60];
+			descriptionLastCommand.description += "6X address MEM" + std::to_string(registr[typeAddress - 0x60]) + "\n";
+			return registr[typeAddress - 0x60];
 		}
 
 		if (h == 0x70) {
 			Type dat;
 			if (finalOperation) {
 				registr[15] += 1;
-				registr[typeAdress - 0x70] -= sizeof(Type);
+				registr[typeAddress - 0x70] -= sizeof(Type);
 			}
-			descriptionLastCommand.description += "7X adress MEM" + std::to_string(registr[typeAdress - 0x70]) + "\n";
-			return registr[typeAdress - 0x70];
+			descriptionLastCommand.description += "7X address MEM" + std::to_string(registr[typeAddress - 0x70]) + "\n";
+			return registr[typeAddress - 0x70];
 		}
 
 		if (h == 0x80) {
-			auto res = registr[typeAdress - 0x80];
-			descriptionLastCommand.description += "8X adress MEM" + std::to_string(registr[typeAdress - 0x80]) + "\n";
+			auto res = registr[typeAddress - 0x80];
+			descriptionLastCommand.description += "8X address MEM" + std::to_string(registr[typeAddress - 0x80]) + "\n";
 			if (finalOperation) {
 				registr[15] += 1;
-				registr[typeAdress - 0x80] += sizeof(Type);
+				registr[typeAddress - 0x80] += sizeof(Type);
 			}
 			return res;
 		}
 
 		if (h == 0x90) {
 			uint32_t res;
-			memory.get(registr[typeAdress - 0x90], res);
-			descriptionLastCommand.description += "9X adress MEM" + std::to_string(registr[typeAdress - 0x90]) + "\n";
+			memory.get(registr[typeAddress - 0x90], res);
+			descriptionLastCommand.description += "9X address MEM" + std::to_string(registr[typeAddress - 0x90]) + "\n";
 			if (finalOperation) {
 				registr[15] += 1;
-				registr[typeAdress - 0x90] += 4;
+				registr[typeAddress - 0x90] += 4;
 			}
 			return res;
 		}
@@ -566,76 +567,76 @@ private:
 		if (h == 0xA0) {
 			uint8_t dat;
 			Type data;
-			memory.get(registr[typeAdress - 0xA0] + 1, dat);
-			uint32_t adress = dat + registr[typeAdress - 0xA0] + 2;
+			memory.get(registr[typeAddress - 0xA0] + 1, dat);
+			uint32_t address = dat + registr[typeAddress - 0xA0] + 2;
 
 			if (finalOperation) {
-				registr[typeAdress - 0xA0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xA0] += sizeof(dat) + 1;
 			}
-			return adress;
+			return address;
 		}
 
 		if (h == 0xC0) {
 			uint16_t dat;
 			Type data;
-			memory.get(registr[typeAdress - 0xC0] + 1, dat);
-			uint32_t adress = dat + registr[typeAdress - 0xC0] + 3;
+			memory.get(registr[typeAddress - 0xC0] + 1, dat);
+			uint32_t address = dat + registr[typeAddress - 0xC0] + 3;
 
 			if (finalOperation) {
-				registr[typeAdress - 0xC0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xC0] += sizeof(dat) + 1;
 			}
-			return adress;
+			return address;
 		}
 
 		if (h == 0xE0) {
 			uint32_t dat;
 			Type data;
-			memory.get(registr[typeAdress - 0xE0] + 1, dat);
-			uint32_t adress = dat + registr[typeAdress - 0xE0] + 5;
+			memory.get(registr[typeAddress - 0xE0] + 1, dat);
+			uint32_t address = dat + registr[typeAddress - 0xE0] + 5;
 
 			if (finalOperation) {
-				registr[typeAdress - 0xE0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xE0] += sizeof(dat) + 1;
 			}
-			return adress;
+			return address;
 		}
 
 		if (h == 0xB0) {
 			uint8_t dat;
 			Type data;
-			uint32_t adress;
-			memory.get(registr[typeAdress - 0xB0] + 1, dat);
-			memory.get(dat + registr[typeAdress - 0xB0] + 2, adress);
+			uint32_t address;
+			memory.get(registr[typeAddress - 0xB0] + 1, dat);
+			memory.get(dat + registr[typeAddress - 0xB0] + 2, address);
 
 			if (finalOperation) {
-				registr[typeAdress - 0xB0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xB0] += sizeof(dat) + 1;
 			}
-			return adress;
+			return address;
 		}
 
 		if (h == 0xD0) {
 			uint16_t dat;
 			Type data;
-			uint32_t adress;
-			memory.get(registr[typeAdress - 0xD0] + 1, dat);
-			memory.get(dat + registr[typeAdress - 0xD0] + 3, adress);
+			uint32_t address;
+			memory.get(registr[typeAddress - 0xD0] + 1, dat);
+			memory.get(dat + registr[typeAddress - 0xD0] + 3, address);
 
 			if (finalOperation) {
-				registr[typeAdress - 0xD0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xD0] += sizeof(dat) + 1;
 			}
-			return adress;
+			return address;
 		}
 
 		if (h == 0xF0) {
 			uint32_t dat;
 			Type data;
-			uint32_t adress;
-			memory.get(registr[typeAdress - 0xF0] + 1, dat);
-			memory.get(dat + registr[typeAdress - 0xF0] + 5, adress);
+			uint32_t address;
+			memory.get(registr[typeAddress - 0xF0] + 1, dat);
+			memory.get(dat + registr[typeAddress - 0xF0] + 5, address);
 
 			if (finalOperation) {
-				registr[typeAdress - 0xF0] += sizeof(dat) + 1;
+				registr[typeAddress - 0xF0] += sizeof(dat) + 1;
 			}
-			return adress;
+			return address;
 		}
 
 		descriptionLastCommand.description += " unknown address";
@@ -686,11 +687,11 @@ public:
 	const SDescriptionLastCommand& getStepDescription() {
 		return descriptionLastCommand;
 	}
-	const std::vector<uint8_t>& getMemory() {
+	const std::vector<uint8_t>& getMemory() const{
 		return memory.getMemory();
 	}
 
-	const std::vector<uint32_t>& getRegister() {
+	const std::vector<uint32_t>& getRegister() const{
 		return registr;
 	}
 
@@ -705,23 +706,23 @@ public:
 	}
 
 
-	const Cflags& getFlags() {
+	const Cflags& getFlags() const{
 		return flag;
 	}
 
-	const bool getCFlag() {
+	const bool getCFlag() const {
 		return flag.C;
 	}
 
-	const bool getNFlag() {
+	const bool getNFlag() const{
 		return flag.N;
 	}
 
-	const bool getVFlag() {
+	const bool getVFlag() const{
 		return flag.V;
 	}
 
-	const bool getZFlag() {
+	const bool getZFlag() const{
 		return flag.Z;
 	}
 
@@ -734,7 +735,7 @@ public:
 		registr[15] += 1;
 
 
-		descriptionLastCommand.description = "adress command: " + int_to_hex(registr[15] - 1) + "\ncommand: ";
+		descriptionLastCommand.description = "address command: " + int_to_hex(registr[15] - 1) + "\ncommand: ";
 		switch (mackCommand)
 		{
         case 0x00:
@@ -981,6 +982,12 @@ public:
 		return descriptionLastCommand;
 	}
 
+
+};
+
+
+::std::ostream& operator<<(::std::ostream& os, const Cprocessor &obj);
+
     SDescriptionLastCommand& execute() {
         while(true){
             auto desc = step();
@@ -990,3 +997,4 @@ public:
     }
 
 };
+
