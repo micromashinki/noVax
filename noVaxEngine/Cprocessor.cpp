@@ -109,3 +109,39 @@ void Cprocessor::save(const std::string& path) {
     }
 
 }
+
+
+::std::ostream& operator<<(::std::ostream& os, const Cprocessor &proc) {
+    auto r = proc.getRegister();
+    auto l = proc.getFlags();
+
+    os << "N: " << l.N << "  Z: " << l.Z << "  V: " << l.V << "  C: " << l.C<<std::endl;
+    for (int i = 0; i < 16; i++)
+        os << "R" << std::hex << i << std::setw(1) << "=" << std::setw(1) << std::hex <<(int)r[i]<< std::setw(3);
+
+    os << std::endl << std::endl;
+
+    auto m = proc.getMemory();
+    os << ' ';
+
+    for (int col = 0; col < 16; col++)
+        os << 'M' << std::hex << col << std::setw((col + 9) % 16 == 0 ? 7:4);
+
+    os << std::endl;
+
+
+    for (int row = 0; row < 20; row++) {
+        for (int col = 0; col < 16; col++) {
+            std::stringstream ss;
+            ss << std::hex << std::setw(2) << std::setfill('0') << (int)m[col + row * 16];
+            std::string result = ss.str();
+            os << std::setw((col + row * 16 + 8) % 16 == 0 ? 8:5) << result;
+        }
+        os << std::endl;
+    }
+
+
+    os << std::endl << std::endl << std::endl;
+
+    return os;
+}

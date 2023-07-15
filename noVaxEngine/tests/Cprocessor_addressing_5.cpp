@@ -16,7 +16,7 @@ TEST(Cprocessor, byte_addressing_5) {
     proc1.step();
 
     Cprocessor proc2;
-    proc2.load(PATH_Cprocessor_addressing_5"_byte.v11");
+    proc2.load(PATH_Cprocessor_addressing_5 "_byte.v11");
 
     EXPECT_EQ(proc1,proc2);
 }
@@ -27,7 +27,7 @@ TEST(Cprocessor, byte_addressing_5_3op) {
     proc1.step();
 
     Cprocessor proc2;
-    proc2.load(PATH_Cprocessor_addressing_5"_byte_3op.v11");
+    proc2.load(PATH_Cprocessor_addressing_5 "_byte_3op.v11");
 
     EXPECT_EQ(proc1,proc2);
 }
@@ -39,7 +39,7 @@ TEST(Cprocessor, word_addressing_5) {
     proc1.step();
 
     Cprocessor proc2;
-    proc2.load(PATH_Cprocessor_addressing_5"_word.v11");
+    proc2.load(PATH_Cprocessor_addressing_5 "_word.v11");
 
     EXPECT_EQ(proc1,proc2);
 }
@@ -50,7 +50,7 @@ TEST(Cprocessor, word_addressing_5_3op) {
     proc1.step();
 
     Cprocessor proc2;
-    proc2.load(PATH_Cprocessor_addressing_5"_word_3op.v11");
+    proc2.load(PATH_Cprocessor_addressing_5 "_word_3op.v11");
 
     EXPECT_EQ(proc1,proc2);
 }
@@ -61,7 +61,7 @@ TEST(Cprocessor, long_addressing_5) {
     proc1.step();
 
     Cprocessor proc2;
-    proc2.load(PATH_Cprocessor_addressing_5"_long.v11");
+    proc2.load(PATH_Cprocessor_addressing_5 "_long.v11");
 
     EXPECT_EQ(proc1,proc2);
 }
@@ -72,7 +72,7 @@ TEST(Cprocessor, long_addressing_5_3op) {
     proc1.step();
 
     Cprocessor proc2;
-    proc2.load(PATH_Cprocessor_addressing_5"_long_3op.v11");
+    proc2.load(PATH_Cprocessor_addressing_5 "_long_3op.v11");
 
     EXPECT_EQ(proc1,proc2);
 }
