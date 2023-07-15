@@ -342,6 +342,8 @@ private:
 		return;
 
 	}
+
+public:
 	template<typename Type>
 
 	Type add(Type op1, Type op2, bool flagC = 0) {
@@ -413,7 +415,7 @@ private:
 	template<typename Type>
 	void adwc() {
 		Type op1 = get<Type>(registr[15]);
-		Type op2 = get<Type>(registr[15]);
+		Type op2 = get<Type>(registr[15], false);
 		set(registr[15], (Type)(add(op1, op2, flag.C)));
 	}
 	template<typename Type>
@@ -511,7 +513,7 @@ private:
 		memory.get(registr[15], op1);
 		registr[15] += op1 + sizeof(Type);
 	}
-
+private:
 	// говно решение, переделать 
 	// быстрый фикс для презентации 
 	template<typename Type>
@@ -736,6 +738,10 @@ public:
 		descriptionLastCommand.description = "address command: " + int_to_hex(registr[15] - 1) + "\ncommand: ";
 		switch (mackCommand)
 		{
+        case 0x00:
+            descriptionLastCommand.description = "HALT";
+            break;
+
 		case 0x80:
 			descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
 			add2<uint8_t>();
@@ -787,6 +793,11 @@ public:
 			descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
 			sub3<uint32_t>();
 			break;
+
+        case 0xD8:
+            descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
+            adwc<uint32_t>();
+            break;
 
 		case 0x96:
 			descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
@@ -965,7 +976,7 @@ public:
 			}
 			break;
 		default:
-			descriptionLastCommand.description += " unknown command" + '\n';
+			descriptionLastCommand.description += std::string(" unknown command: ") + int_to_hex(mackCommand) + '\n';
 		}
 
 		return descriptionLastCommand;
@@ -976,3 +987,14 @@ public:
 
 
 ::std::ostream& operator<<(::std::ostream& os, const Cprocessor &obj);
+
+    SDescriptionLastCommand& execute() {
+        while(true){
+            auto desc = step();
+            std::cout << desc.description << std::endl;
+            if (desc.description == "HALT") break;
+        }
+    }
+
+};
+

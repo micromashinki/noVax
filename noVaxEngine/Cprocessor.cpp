@@ -37,6 +37,7 @@ void Cprocessor::load(const std::string& path) {
         }
     }
 
+
     flag.C = PSL & 0x1;
     flag.V = (PSL >> 1) & 0x1;
     flag.Z = (PSL >> 2) & 0x1;
