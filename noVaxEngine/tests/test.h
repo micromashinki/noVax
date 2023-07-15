@@ -8,7 +8,7 @@
 #endif //NOVAX_GUI_TEST_H
 
 
-#define DEFAULT_PATH "../../noVaxEngine/tests/file"
+#define DEFAULT_PATH "../noVaxEngine/tests/file"
 #define PATH_Cprocessor_save_load DEFAULT_PATH "/Cprocessor_save_load/"
 #define PATH_Cprocessor_addressing_5 DEFAULT_PATH "/Cprocessor_addressing_5/"
 #define PATH_Cprocessor_addressing_6 DEFAULT_PATH "/Cprocessor_addressing_6/"
