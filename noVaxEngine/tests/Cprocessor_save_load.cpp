@@ -30,7 +30,7 @@ TEST(Cprocessor, load_1) {
 TEST(Cprocessor, load_save_load_1) {
     Cprocessor proc1;
     Cprocessor proc2;
-    proc1.load(PATH_Cprocessor_save_load"1.v11");
+    proc1.load(PATH_Cprocessor_save_load "1.v11");
     proc1.save(PATH_Cprocessor_save_load"test_1.v11");
     proc2.load(PATH_Cprocessor_save_load"test_1.v11");
     EXPECT_EQ(proc1,proc2);

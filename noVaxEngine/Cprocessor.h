@@ -981,13 +981,6 @@ public:
 
 		return descriptionLastCommand;
 	}
-
-
-};
-
-
-::std::ostream& operator<<(::std::ostream& os, const Cprocessor &obj);
-
     SDescriptionLastCommand& execute() {
         while(true){
             auto desc = step();
@@ -996,5 +989,10 @@ public:
         }
     }
 
+
 };
+
+
+
+::std::ostream& operator<<(::std::ostream& os, const Cprocessor &obj);
 
