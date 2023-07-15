@@ -116,21 +116,25 @@ void Okno::makeStep(wxCommandEvent& e) {
 }
 
 void Okno::executeProgram(wxCommandEvent& e) {
-    //Cprocessor::SDescriptionLastCommand tmp;
-    //tut budet run
-    /*
+    Cprocessor::SDescriptionLastCommand tmp;
+    try {
+        tmp = cp.execute();
+    }
+    catch(...) {
+        wxMessageBox("Не работает!\nКто виноват?");
+    }
     std::vector<uint32_t> cells = tmp.changeCell;
     std::string desc = tmp.description;
     for (int i = 0; i < cells.size(); i++) {
         int a = cells[i];
         mempanel->setValue(a / 16, a % 16, int_to_hex(cp.getMemory()[a]));
     }
-    std::vector<uint32_t> sasha_i_lesha_uebani= cp.getRegister();
+    std::vector<uint32_t> poshel_nakhuy_ueban= cp.getRegister();
     for (int i = 0; i < 16; i++) {
-        regpanel->setValue(i, int_to_hex(sasha_i_lesha_uebani[i]));
+        regpanel->setValue(i, int_to_hex(poshel_nakhuy_ueban[i]));
     }
     msgpanel->setMessage(desc);
-    */
+
 }
 
 void Okno::openFile(wxCommandEvent& e) {
