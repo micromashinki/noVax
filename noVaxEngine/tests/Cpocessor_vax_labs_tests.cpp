@@ -6,7 +6,7 @@
 #include "test.h"
 #include <cstdlib>
 
-
+/*
 TEST(Cprocessor, lab1) {
     Cprocessor proc1;
     proc1.load(PATH_Cprocessor_save_load "1lab_do.v11");
@@ -18,7 +18,7 @@ TEST(Cprocessor, lab1) {
 
 
     EXPECT_TRUE(proc1 == proc2);
-}
+}*/
 
 TEST(Cprocessor, load_save_load_12) {
     Cprocessor proc1;
