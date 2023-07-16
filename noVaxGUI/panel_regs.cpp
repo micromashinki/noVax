@@ -172,8 +172,12 @@ void RegPanel::denyResizeRow(wxGridSizeEvent& e) {
 
 void RegPanel::setValue(int i, const std::string& str) {
     if ((str.length() > 8) or (str.empty())) { return; }
-    if( i > 7) sec_col->SetCellValue(i-8, 1, str);
-    else first_col->SetCellValue(i, 0, str);
+    std::string a = str;
+    while (a.size() != 8){
+        a = "0"+str;
+    }
+    if( i > 7) sec_col->SetCellValue(i-8, 1, a);
+    else first_col->SetCellValue(i, 0, a);
     n_flag->SetValue("N = " + std::to_string(cp.getNFlag()));
     z_flag->SetValue("Z = " + std::to_string(cp.getZFlag()));
     v_flag->SetValue("V = " + std::to_string(cp.getVFlag()));
