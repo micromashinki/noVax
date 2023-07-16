@@ -1,10 +1,9 @@
 //
-// Created by chubr on 10.07.23.
+// Created by chubr on 16.07.23.
 //
 #include "gtest/gtest.h"
 #include "../Cprocessor.h"
 #include "test.h"
-#include <cstdlib>
 
 
 TEST(Cprocessor, byte_addressing_8) {
