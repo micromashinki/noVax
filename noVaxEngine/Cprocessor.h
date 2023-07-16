@@ -74,14 +74,20 @@ private:
 
 		if (h == 0x70) {
 			Type dat;
-			if (finalOperation) {
-				registr[15] += 1;
-				registr[typeAddress - 0x70] -= sizeof(Type);
-			}
-            auto qq = registr[typeAddress - 0x70];
+
+            registr[15] += 1;
+
+            auto saved_reg_val = registr[typeAddress - 0x70];
+            registr[typeAddress - 0x70] -= sizeof(Type);
+
 			memory.get(registr[typeAddress - 0x70], dat);
 			descriptionLastCommand.description += "7X address MEM" + int_to_hex(registr[typeAddress - 0x70]) + " value : " + int_to_hex(dat) + "\n";
-			return dat;
+
+            if (!finalOperation) {
+                registr[15] -= 1;
+                registr[typeAddress - 0x70] = saved_reg_val;
+            }
+            return dat;
 		}
 
 		if (h == 0x80) {
