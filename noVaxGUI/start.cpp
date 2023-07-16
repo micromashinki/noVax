@@ -24,8 +24,15 @@ bool InitClass::OnInit() {
 
 Okno::Okno(const wxString& str, const wxSize& s) : wxFrame (NULL, wxID_ANY, str, wxDefaultPosition, s) {
     size = s;
-    SetMinSize(s);
-    SetMaxSize(wxSize(1089+35, 700+54)); //kostyl, na winde budet koryavo mb
+    //kostyl dlya raZmeroV okna
+    if (wxPlatformInfo::Get().GetDesktopEnvironment().ToStdString() == "GNOME") {
+        SetMinSize(wxSize(1089+34, 700+50));
+        SetMaxSize(wxSize(1089+34, 700+50));
+    }
+    else {
+        SetMinSize(s);
+        SetMaxSize(s);
+    }
     mempanel = new MemPanel(wxSize(GetWidth() / 1.5, GetHeight() - 250));
     mempanel->Create(this, wxID_ANY, wxPoint(0, 0), wxSize(mempanel->GetWidth(), mempanel->GetHeight()));
     mempanel->setSurface();
@@ -116,25 +123,30 @@ void Okno::makeStep(wxCommandEvent& e) {
 }
 
 void Okno::executeProgram(wxCommandEvent& e) {
-    Cprocessor::SDescriptionLastCommand tmp;
+    std::vector<Cprocessor::SDescriptionLastCommand> tmp1;
     try {
-        tmp = cp.execute();
+        tmp1 = cp.execute();
     }
     catch(...) {
         wxMessageBox("Не работает!\nКто виноват?");
     }
-    std::vector<uint32_t> cells = tmp.changeCell;
-    std::string desc = tmp.description;
-    for (int i = 0; i < cells.size(); i++) {
-        int a = cells[i];
-        mempanel->setValue(a / 16, a % 16, int_to_hex(cp.getMemory()[a]));
-    }
-    std::vector<uint32_t> poshel_nakhuy_ueban= cp.getRegister();
-    for (int i = 0; i < 16; i++) {
-        regpanel->setValue(i, int_to_hex(poshel_nakhuy_ueban[i]));
+    std::string desc;
+    uint16_t count = 1;
+    for(Cprocessor::SDescriptionLastCommand tmp : tmp1){
+        std::vector<uint32_t> cells = tmp.changeCell;
+        desc += tmp.description;
+        desc += '\n';
+
+        for (int i = 0; i < cells.size(); i++) {
+            int a = cells[i];
+            mempanel->setValue(a / 16, a % 16, int_to_hex(cp.getMemory()[a]));
+        }
+        std::vector<uint32_t> poshel_nakhuy_ueban = cp.getRegister();
+        for (int i = 0; i < 16; i++) {
+            regpanel->setValue(i, int_to_hex(poshel_nakhuy_ueban[i]));
+        }
     }
     msgpanel->setMessage(desc);
-
 }
 
 void Okno::openFile(wxCommandEvent& e) {
