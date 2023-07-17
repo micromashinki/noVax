@@ -153,45 +153,45 @@ private:
 		}
 
 		if (h == 0xB0) {
-			uint8_t dat;
+			uint8_t offset;
 			Type data;
 			uint32_t address;
-			memory.get(registr[typeAddress - 0xB0] + 1, dat);
-			memory.get(dat + registr[typeAddress - 0xB0] + 2, address);
+			memory.get(registr[15] + 1, offset);
+			memory.get(offset + registr[typeAddress - 0xB0], address);
 			memory.get(address, data);
 			descriptionLastCommand.description += "0xB0 new value : " + int_to_hex(data) + "\n";
 			if (finalOperation) {
-				registr[typeAddress - 0xB0] += sizeof(dat) + 1;
+				registr[15] += sizeof(offset) + 1;
 			}
 			return data;
 		}
 
 		if (h == 0xD0) {
-			uint16_t dat;
-			Type data;
-			uint32_t address;
-			memory.get(registr[typeAddress - 0xD0] + 1, dat);
-			memory.get(dat + registr[typeAddress - 0xD0] + 3, address);
-			memory.get(address, data);
-			descriptionLastCommand.description += "0xD0 new value : " + int_to_hex(data) + "\n";
-			if (finalOperation) {
-				registr[typeAddress - 0xD0] += sizeof(dat) + 1;
-			}
-			return data;
+            uint16_t offset;
+            Type data;
+            uint32_t address;
+            memory.get(registr[15] + 1, offset);
+            memory.get(offset + registr[typeAddress - 0xD0], address);
+            memory.get(address, data);
+            descriptionLastCommand.description += "0xD0 new value : " + int_to_hex(data) + "\n";
+            if (finalOperation) {
+                registr[15] += sizeof(offset) + 1;
+            }
+            return data;
 		}
 
 		if (h == 0xF0) {
-			uint32_t dat;
-			Type data;
-			uint32_t address;
-			memory.get(registr[typeAddress - 0xF0] + 1, dat);
-			memory.get(dat + registr[typeAddress - 0xF0] + 5, address);
-			memory.get(address, data);
-			descriptionLastCommand.description += "0xF0 new value : " + int_to_hex(data) + "\n";
-			if (finalOperation) {
-				registr[typeAddress - 0xF0] += sizeof(dat) + 1;
-			}
-			return data;
+            uint32_t offset;
+            Type data;
+            uint32_t address;
+            memory.get(registr[15] + 1, offset);
+            memory.get(offset + registr[typeAddress - 0xF0], address);
+            memory.get(address, data);
+            descriptionLastCommand.description += "0xF0 new value : " + int_to_hex(data) + "\n";
+            if (finalOperation) {
+                registr[15] += sizeof(offset) + 1;
+            }
+            return data;
 		}
 
 		descriptionLastCommand.description += " unknown address";
@@ -305,45 +305,45 @@ private:
 		}
 
 		if (h == 0xB0) {
-			uint8_t dat;
+			uint8_t offset;
 			Type data;
 			uint32_t address;
-			memory.get(registr[typeAddress - 0xB0] + 1, dat);
-			memory.get(dat + registr[typeAddress - 0xB0] + 2, address);
+			memory.get(registr[15] + 1, offset);
+			memory.get(offset + registr[typeAddress - 0xB0], address);
 			memory.set(address, value);
 			descriptionLastCommand.description += "0xB0 new value : " + int_to_hex(value) + "\n";
 			if (finalOperation) {
-				registr[typeAddress - 0xB0] += sizeof(dat) + 1;
+				registr[15] += sizeof(offset) + 1;
 			}
 			flag = true;
 		}
 
 		if (h == 0xD0) {
-			uint16_t dat;
-			Type data;
-			uint32_t address;
-			memory.get(registr[typeAddress - 0xD0] + 1, dat);
-			memory.get(dat + registr[typeAddress - 0xD0] + 3, address);
-			memory.set(address, value);
-			descriptionLastCommand.description += "0xD0 new value : " + int_to_hex(value) + "\n";
-			if (finalOperation) {
-				registr[typeAddress - 0xD0] += sizeof(dat) + 1;
-			}
-			flag = true;
+            uint16_t offset;
+            Type data;
+            uint32_t address;
+            memory.get(registr[15] + 1, offset);
+            memory.get(offset + registr[typeAddress - 0xD0], address);
+            memory.set(address, value);
+            descriptionLastCommand.description += "0xD0 new value : " + int_to_hex(value) + "\n";
+            if (finalOperation) {
+                registr[15] += sizeof(offset) + 1;
+            }
+            flag = true;
 		}
 
 		if (h == 0xF0) {
-			uint32_t dat;
-			Type data;
-			uint32_t address;
-			memory.get(registr[typeAddress - 0xF0] + 1, dat);
-			memory.get(dat + registr[typeAddress - 0xF0] + 5, address);
-			memory.set(address, value);
-			descriptionLastCommand.description += "0xF0 new value : " + int_to_hex(value) + "\n";
-			if (finalOperation) {
-				registr[typeAddress - 0xF0] += sizeof(dat) + 1;
-			}
-			flag = true;
+            uint32_t offset;
+            Type data;
+            uint32_t address;
+            memory.get(registr[15] + 1, offset);
+            memory.get(offset + registr[typeAddress - 0xF0], address);
+            memory.set(address, value);
+            descriptionLastCommand.description += "0xF0 new value : " + int_to_hex(value) + "\n";
+            if (finalOperation) {
+                registr[15] += sizeof(offset) + 1;
+            }
+            flag = true;
 		}
 
 		if (!flag)

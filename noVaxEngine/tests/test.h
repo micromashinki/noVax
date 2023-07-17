@@ -16,3 +16,4 @@
 #define PATH_Cprocessor_addressing_8 DEFAULT_PATH "/Cprocessor_addressing_8/"
 #define PATH_Cprocessor_addressing_9 DEFAULT_PATH "/Cprocessor_addressing_9/"
 #define PATH_Cprocessor_addressing_ACE DEFAULT_PATH "/Cprocessor_addressing_ACE/"
+#define PATH_Cprocessor_addressing_BDF DEFAULT_PATH "/Cprocessor_addressing_BDF/"

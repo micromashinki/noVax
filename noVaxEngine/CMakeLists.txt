@@ -4,7 +4,7 @@ project(noVAX-lib)
 set(CMAKE_CXX_STANDARD 20)
 
 file(GLOB SOURCES "*.hpp")
-add_library(noVAX-lib ${SOURCES} Cprocessor.cpp tests/Cprocessor_addressing_8.cpp tests/Cprocessor_addressing_9.cpp tests/Cprocessor_addressing_ACE.cpp)
+add_library(noVAX-lib ${SOURCES} Cprocessor.cpp tests/Cprocessor_addressing_8.cpp tests/Cprocessor_addressing_9.cpp tests/Cprocessor_addressing_ACE.cpp tests/Cprocessor_addressing_BDF.cpp)
 
 # specify .hpp as source files
 set_source_files_properties(${SOURCES} PROPERTIES LANGUAGE CXX)
@@ -25,5 +25,5 @@ enable_testing()
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
-add_executable(runTests tests/test.cpp tests/Cprocessor_save_load.cpp tests/Cprocessor_addressing_5.cpp tests/Cprocessor_operations_test.cpp tests/Cpocessor_vax_labs_tests.cpp tests/Cprocessor_addressing_6.cpp tests/Cprocessor_addressing_7.cpp tests/Cprocessor_addressing_8.cpp tests/Cprocessor_addressing_9.cpp tests/Cprocessor_addressing_ACE tests/test.h)
+add_executable(runTests tests/test.cpp tests/Cprocessor_save_load.cpp tests/Cprocessor_addressing_5.cpp tests/Cprocessor_operations_test.cpp tests/Cpocessor_vax_labs_tests.cpp tests/Cprocessor_addressing_6.cpp tests/Cprocessor_addressing_7.cpp tests/Cprocessor_addressing_8.cpp tests/Cprocessor_addressing_9.cpp tests/Cprocessor_addressing_ACE tests/Cprocessor_addressing_BDF.cpp tests/test.h)
 target_link_libraries(runTests ${GTEST_BOTH_LIBRARIES} pthread noVAX-lib)
