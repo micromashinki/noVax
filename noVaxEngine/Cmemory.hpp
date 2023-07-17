@@ -27,7 +27,7 @@ public:
         return res;
     }
 
-    std::vector<uint8_t>& getMemory() {
+    const std::vector<uint8_t>& getMemory() const{
         return memory;
     }
 
