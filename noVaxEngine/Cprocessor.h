@@ -36,6 +36,7 @@ public:
 
 private:
 	SDescriptionLastCommand descriptionLastCommand;
+	std::vector<SDescriptionLastCommand> history;
 public:
 
     void serFlags(bool N,bool Z,bool V,bool C){
@@ -990,12 +991,17 @@ public:
 
 		return descriptionLastCommand;
 	}
-    SDescriptionLastCommand& execute() {
+
+    std::vector<SDescriptionLastCommand>& execute() {
+		history.clear();
+
         while(true){
             auto desc = step();
+			history.push_back(desc);
             std::cout << desc.description << std::endl;
             if (desc.description == "HALT") break;
         }
+		return history;
     }
 
 

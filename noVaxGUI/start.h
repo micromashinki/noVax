@@ -18,7 +18,8 @@ public:
 
 	void setDark(wxCommandEvent&);
 	void showAbout(wxCommandEvent&);
-	void startProgram(wxCommandEvent&);
+	void makeStep(wxCommandEvent&);
+	void executeProgram(wxCommandEvent&);
 
 	void openFile(wxCommandEvent&);
 	void saveFile(wxCommandEvent&);
