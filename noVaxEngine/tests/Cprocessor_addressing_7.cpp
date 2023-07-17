@@ -4,7 +4,6 @@
 #include "gtest/gtest.h"
 #include "../Cprocessor.h"
 #include "test.h"
-#include <cstdlib>
 
 
 TEST(Cprocessor, byte_addressing_7) {
