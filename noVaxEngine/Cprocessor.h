@@ -114,39 +114,42 @@ private:
 		}
 
 		if (h == 0xA0) {
-			uint8_t dat;
-			Type data;
-			memory.get(registr[typeAddress - 0xA0] + 1, dat);
-			memory.get(dat + registr[typeAddress - 0xA0] + 2, data);
-			descriptionLastCommand.description += "0xA0 new value : " + int_to_hex(data) + "\n";
-			if (finalOperation) {
-				registr[typeAddress - 0xA0] += sizeof(dat) + 1;
-			}
-			return data;
+            uint8_t offset;
+            Type dat;
+            memory.get(registr[15] + 1, offset);
+            memory.get(offset+registr[typeAddress - 0xA0],dat);
+            descriptionLastCommand.description += "0xA0 new value : " + int_to_hex(dat) + "\n";
+            if (finalOperation) {
+                registr[15] += sizeof(offset) + 1;
+            }
+
+			return dat;
 		}
 
 		if (h == 0xC0) {
-			uint16_t dat;
-			Type data;
-			memory.get(registr[typeAddress - 0xC0] + 1, dat);
-			memory.get(dat + registr[typeAddress - 0xC0] + 3, data);
-			descriptionLastCommand.description += "0xC0 new value : " + int_to_hex(data) + "\n";
-			if (finalOperation) {
-				registr[typeAddress - 0xC0] += sizeof(dat) + 1;
-			}
-			return data;
+            uint16_t offset;
+            Type dat;
+            memory.get(registr[15] + 1, offset);
+            memory.get(offset+registr[typeAddress - 0xC0],dat);
+            descriptionLastCommand.description += "0xC0 new value : " + int_to_hex(dat) + "\n";
+            if (finalOperation) {
+                registr[15] += sizeof(offset) + 1;
+            }
+
+            return dat;
 		}
 
 		if (h == 0xE0) {
-			uint32_t dat;
-			Type data;
-			memory.get(registr[typeAddress - 0xE0] + 1, dat);
-			memory.get(dat + registr[typeAddress - 0xE0] + 5, data);
-			descriptionLastCommand.description += "0xE0 new value : " + int_to_hex(data) + "\n";
-			if (finalOperation) {
-				registr[typeAddress - 0xE0] += sizeof(dat) + 1;
-			}
-			return data;
+            uint32_t offset;
+            Type dat;
+            memory.get(registr[15] + 1, offset);
+            memory.get(offset+registr[typeAddress - 0xE0],dat);
+            descriptionLastCommand.description += "0xE0 new value : " + int_to_hex(dat) + "\n";
+            if (finalOperation) {
+                registr[15] += sizeof(offset) + 1;
+            }
+
+            return dat;
 		}
 
 		if (h == 0xB0) {
@@ -269,36 +272,36 @@ private:
 		}
 
 		if (h == 0xA0) {
-			uint8_t dat;
-			memory.get(registr[typeAddress - 0xA0] + 1, dat);
-			memory.set(dat + registr[typeAddress - 0xA0] + 2, value);
+            uint8_t offset;
+			memory.get(registr[15] + 1, offset);
+			memory.set(offset + registr[typeAddress - 0xA0], value);
 			descriptionLastCommand.description += "0xA0 new value : " + int_to_hex(value) + "\n";
 			if (finalOperation) {
-				registr[typeAddress - 0xA0] += sizeof(dat) + 1;
+				registr[15] += sizeof(offset) + 1;
 			}
 			flag = true;
 		}
 
 		if (h == 0xC0) {
-			uint16_t dat;
-			memory.get(registr[typeAddress - 0xC0] + 1, dat);
-			memory.set(dat + registr[typeAddress - 0xC0] + 3, value);
-			descriptionLastCommand.description += "0xC0 new value : " + int_to_hex(value) + "\n";
-			if (finalOperation) {
-				registr[typeAddress - 0xC0] += sizeof(dat) + 1;
-			}
-			flag = true;
+            uint16_t offset;
+            memory.get(registr[15] + 1, offset);
+            memory.set(offset + registr[typeAddress - 0xC0], value);
+            descriptionLastCommand.description += "0xC0 new value : " + int_to_hex(value) + "\n";
+            if (finalOperation) {
+                registr[15] += sizeof(offset) + 1;
+            }
+            flag = true;
 		}
 
 		if (h == 0xE0) {
-			uint32_t dat;
-			memory.get(registr[typeAddress - 0xE0] + 1, dat);
-			memory.set(dat + registr[typeAddress - 0xE0] + 5, value);
-			descriptionLastCommand.description += "0xE0 new value : " + int_to_hex(value) + "\n";
-			if (finalOperation) {
-				registr[typeAddress - 0xE0] += sizeof(dat) + 1;
-			}
-			flag = true;
+            uint32_t offset;
+            memory.get(registr[15] + 1, offset);
+            memory.set(offset + registr[typeAddress - 0xE0], value);
+            descriptionLastCommand.description += "0xE0 new value : " + int_to_hex(value) + "\n";
+            if (finalOperation) {
+                registr[15] += sizeof(offset) + 1;
+            }
+            flag = true;
 		}
 
 		if (h == 0xB0) {

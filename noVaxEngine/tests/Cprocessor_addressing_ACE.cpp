@@ -10,6 +10,7 @@ TEST(Cprocessor, byte_addressing_ACE) {
     Cprocessor noVaxProcessor;
     noVaxProcessor.load(PATH_Cprocessor_addressing_ACE "byte.v11");
     noVaxProcessor.step();
+
     noVaxProcessor.step();
     noVaxProcessor.step();
 
