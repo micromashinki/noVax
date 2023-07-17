@@ -47,17 +47,17 @@ Okno::Okno(const wxString& str, const wxSize& s) : wxFrame (NULL, wxID_ANY, str,
 
     menuFile = new wxMenu;
     menuFile->Append(ID_Open, "Open");
-    menuFile->Append(ID_Save, "Save");
+    menuFile->Append(ID_Save, "Save\tCtrl+S");
 
     menuFile2 = new wxMenu;
-    menuFile2->Append(ID_Start, "Start");
-    menuFile2->Append(ID_Step, "Step");
+    menuFile2->Append(ID_Start, "Start\tF6");
+    menuFile2->Append(ID_Step, "Step\tF5");
 
     menuFile3 = new wxMenu;
-    menuFile3->AppendCheckItem(ID_Dark, "Dark");
+    menuFile3->AppendCheckItem(ID_Dark, "Change theme\tCtrl+T");
 
     menuFile4 = new wxMenu;
-    menuFile4->Append(ID_About, "About");
+    menuFile4->Append(ID_About, "About\tCtrl+A");
 
 
 
