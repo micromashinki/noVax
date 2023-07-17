@@ -137,7 +137,7 @@ void MemPanel::setTheme(const wxColour& label, const wxColour& cell, const wxCol
 
 
 void MemPanel::setValue(int i, int j, const std::string& str) {
-    if ((str.length() > 5) || (str.empty())) { return; }
+    if ((str.length() > 2) || (str.empty())) { return; }
     if (str.length() == 1) table->SetCellValue(i, j, wxString("0" + str));
     else table->SetCellValue(i, j, wxString(str));
 }

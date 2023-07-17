@@ -139,6 +139,11 @@ void RegPanel::checkValue(wxGridEvent& e) {
                 }
             }
         }
+        if (str.Length() < 8) {
+            std::string tmp = "";
+            tmp.assign(8-str.length(), '0');
+            str = tmp+str;
+        }
     }
     if (!invalid) {
         e.Veto();
@@ -172,8 +177,14 @@ void RegPanel::denyResizeRow(wxGridSizeEvent& e) {
 
 void RegPanel::setValue(int i, const std::string& str) {
     if ((str.length() > 8) || (str.empty())) { return; }
-    if( i > 7) sec_col->SetCellValue(i-8, 1, str);
-    else first_col->SetCellValue(i, 0, str);
+    std::string tmp = "";
+    if(str.length() < 8){
+        tmp.assign(8-str.length(), '0');
+        tmp = tmp+str;
+    }
+
+    if( i > 7) sec_col->SetCellValue(i-8, 1, tmp);
+    else first_col->SetCellValue(i, 0, tmp);
     n_flag->SetValue("N = " + std::to_string(cp.getNFlag()));
     z_flag->SetValue("Z = " + std::to_string(cp.getZFlag()));
     v_flag->SetValue("V = " + std::to_string(cp.getVFlag()));
