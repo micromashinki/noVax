@@ -1,0 +1,64 @@
+[Processor settings]
+Memory size=2048
+Max commands before interruption=1048576
+Generate messages=1
+[Registers]
+R1=00000056
+R2=0000001F
+R3=00000666
+R4=00000030
+R6=0000002E
+RF=0000006A
+[Memory]
+0x00000020=00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 
+0x00000030=00 00 02 00 00 00 03 00 00 00 04 00 00 00 05 00 
+0x00000040=00 00 06 00 00 00 07 00 00 00 08 00 00 00 09 00 
+0x00000050=00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 
+0x00000060=00 00 00 00 00 00 00 00 00 00 78 52 71 63 13 30 
+0x00000070=B1 56 51 12 F5 00 00 00 00 00 00 00 00 00 00 00 
+0x000000A0=A8 61 55 11 CB 00 00 00 00 00 00 00 00 00 00 00 
+[Variable 0]
+Name=сдвиг для проверки
+VarType=2
+IsReg=1
+Address=00000002
+Base=3
+[Variable 1]
+Name=массив
+VarType=2
+IsReg=1
+Address=00000001
+Base=3
+[Variable 2]
+Name=указаетель на мусор
+VarType=2
+IsReg=1
+Address=00000003
+Base=3
+[Variable 3]
+Name=логическая сумма
+VarType=2
+IsReg=1
+Address=00000005
+Base=3
+[Windows]
+MemoryEditor.Opened=1
+MemoryEditor.Left=-8
+MemoryEditor.Top=92
+MemoryEditor.Width=600
+MemoryEditor.Height=476
+RegsEditor.Opened=1
+RegsEditor.Left=903
+RegsEditor.Top=98
+RegsEditor.Width=263
+RegsEditor.Height=308
+MsgsEditor.Opened=1
+MsgsForm.Left=0
+MsgsForm.Top=564
+MsgsForm.Width=600
+MsgsForm.Height=300
+VarsEditor.Opened=1
+VarsWin.Left=942
+VarsWin.Top=416
+VarsWin.Width=588
+VarsWin.Height=386
