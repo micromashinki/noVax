@@ -220,7 +220,7 @@ private:
 
 
             memory.get(base.first+ index*sizeof(Type), data);
-            descriptionLastCommand.description += "0x50 new value : " + int_to_hex(data) + "\n";
+            descriptionLastCommand.description += "0x40 new value : " + int_to_hex(data) + "\n";
             if (finalOperation) {
                 registr[15] += sizeof(offset) + 1;
             }
@@ -412,6 +412,28 @@ private:
             }
             flag = true;
         }
+
+
+        if (h == 0x40) {
+            uint32_t offset;
+            uint32_t address;
+            uint32_t r15save = registr[15];
+            registr[15] += 1;
+            uint32_t index =registr[typeAddress - 0x40];
+            std::pair<Type,uint32_t > base =  get_ValAddr <Type>( index, finalOperation );
+
+
+            memory.set(base.first+ index*sizeof(Type), value);
+            descriptionLastCommand.description += "0x40 new value : " + int_to_hex(value) + "\n";
+            if (finalOperation) {
+                registr[15] += sizeof(offset) + 1;
+            }
+            else {
+                registr[15] = r15save;
+            }
+            flag = true;
+        }
+
 
         if (!flag)
             descriptionLastCommand.description += " unknown address " + int_to_hex(typeAddress);
