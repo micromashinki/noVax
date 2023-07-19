@@ -210,23 +210,19 @@ private:
         }
 
         if (h == 0x40) {
+            int code_index = index; // Разберись в set index значение, а в get - ссылка
             uint32_t offset;
             Type data;
             uint32_t address;
-            uint32_t r15save = registr[15];
-            registr[15] += 1;
-            uint32_t index =registr[typeAddress - 0x40];
-            std::pair<Type,uint32_t > base =  get_ValAddr <Type>( index, finalOperation );
-
-
-            memory.get(base.first+ index*sizeof(Type), data);
-            descriptionLastCommand.description += "0x40 new value : " + int_to_hex(data) + "\n";
             if (finalOperation) {
-                registr[15] += sizeof(offset) + 1;
+                registr[15] += 1;
             }
-            else {
-                registr[15] = r15save;
-            }
+            uint32_t iarr =registr[typeAddress - 0x40];
+            std::pair<Type,uint32_t > base =  get_ValAddr <uint32_t>(code_index +1, finalOperation );
+
+
+            memory.get(address = (base.second+ iarr *sizeof(Type)), data);
+            descriptionLastCommand.description += "0x40 new value : " + int_to_hex(data) + "\n";
             return {data,address};
         }
 
@@ -245,10 +241,14 @@ private:
 
     template<typename Type>
     Type get(const uint32_t &index, bool finalOperation = true){
-        std::pair<Type,uint32_t > qq = get_ValAddr<Type>( index, finalOperation);
-        return qq.first;
-
+        return get_ValAddr<Type>( index, finalOperation).first;
     }
+
+    template<typename Type>
+    uint32_t getPhysicalAddress(const uint32_t &index, bool finalOperation = true) {
+        return get_ValAddr<Type>( index, finalOperation).second;
+    }
+
 
     template<typename Type>
     void set(const uint32_t index, const Type value, bool finalOperation = true) {
@@ -262,8 +262,20 @@ private:
             if (finalOperation)
                 registr[15] += 1;
 
-            //registr[typeAddress - 0x50] = (uint32_t)value & (registr[typeAddress - 0x50] | ~registr[typeAddress - 0x50]);  //X2 ∧ (X1 ∨ !X1)
-            registr[typeAddress - 0x50] = value;
+            int regno = typeAddress - 0x50;
+            if (sizeof (Type)==1){
+                registr[regno] &= 0xffffff00;
+            }
+            else if (sizeof (Type)==2){
+                registr[regno] &= 0xffff0000;
+            }
+            else if (sizeof (Type)==4){
+                registr[regno] = 0;
+            }else{
+                throw "Not implemented";
+            }
+
+            registr[typeAddress - 0x50] |= value;
             descriptionLastCommand.description += "5X address R" + int_to_hex(typeAddress - 0x50) + " new value : " +
                                                   int_to_hex(registr[typeAddress - 0x50]) + "\n";
             flag = true;
@@ -417,20 +429,15 @@ private:
         if (h == 0x40) {
             uint32_t offset;
             uint32_t address;
-            uint32_t r15save = registr[15];
-            registr[15] += 1;
-            uint32_t index =registr[typeAddress - 0x40];
-            std::pair<Type,uint32_t > base =  get_ValAddr <Type>( index, finalOperation );
-
-
-            memory.set(base.first+ index*sizeof(Type), value);
-            descriptionLastCommand.description += "0x40 new value : " + int_to_hex(value) + "\n";
             if (finalOperation) {
-                registr[15] += sizeof(offset) + 1;
+                registr[15] += 1;
             }
-            else {
-                registr[15] = r15save;
-            }
+            uint32_t iarr =registr[typeAddress - 0x40];
+            std::pair<Type,uint32_t > base =  get_ValAddr <uint32_t>( index+1, finalOperation );
+
+
+            memory.set(base.second+ iarr*sizeof(Type), value);
+            descriptionLastCommand.description += "0x40 new value : " + int_to_hex(value) + "\n";
             flag = true;
         }
 
@@ -646,134 +653,6 @@ public:
     }
 
 private:
-    // говно решение, переделать
-    // быстрый фикс для презентации
-    template<typename Type>
-    uint32_t getPhysicalAddress(const uint32_t &index, bool finalOperation = true) {
-        uint8_t typeAddress;
-        memory.get(index, typeAddress);
-
-        descriptionLastCommand.description += "get value: ";
-
-        auto h = typeAddress & 0xF0;
-
-        if (h == 0x60) {
-            if (finalOperation)
-                registr[15] += 1;
-
-            descriptionLastCommand.description += "6X address MEM" + std::to_string(registr[typeAddress - 0x60]) + "\n";
-            return registr[typeAddress - 0x60];
-        }
-
-        if (h == 0x70) {
-            Type dat;
-            if (finalOperation) {
-                registr[15] += 1;
-                registr[typeAddress - 0x70] -= sizeof(Type);
-            }
-            descriptionLastCommand.description += "7X address MEM" + std::to_string(registr[typeAddress - 0x70]) + "\n";
-            return registr[typeAddress - 0x70];
-        }
-
-        if (h == 0x80) {
-            auto res = registr[typeAddress - 0x80];
-            descriptionLastCommand.description += "8X address MEM" + std::to_string(registr[typeAddress - 0x80]) + "\n";
-            if (finalOperation) {
-                registr[15] += 1;
-                registr[typeAddress - 0x80] += sizeof(Type);
-            }
-            return res;
-        }
-
-        if (h == 0x90) {
-            uint32_t res;
-            memory.get(registr[typeAddress - 0x90], res);
-            descriptionLastCommand.description += "9X address MEM" + std::to_string(registr[typeAddress - 0x90]) + "\n";
-            if (finalOperation) {
-                registr[15] += 1;
-                registr[typeAddress - 0x90] += 4;
-            }
-            return res;
-        }
-
-        if (h == 0xA0) {
-            uint8_t dat;
-            Type data;
-            memory.get(registr[typeAddress - 0xA0] + 1, dat);
-            uint32_t address = dat + registr[typeAddress - 0xA0] + 2;
-
-            if (finalOperation) {
-                registr[typeAddress - 0xA0] += sizeof(dat) + 1;
-            }
-            return address;
-        }
-
-        if (h == 0xC0) {
-            uint16_t dat;
-            Type data;
-            memory.get(registr[typeAddress - 0xC0] + 1, dat);
-            uint32_t address = dat + registr[typeAddress - 0xC0] + 3;
-
-            if (finalOperation) {
-                registr[typeAddress - 0xC0] += sizeof(dat) + 1;
-            }
-            return address;
-        }
-
-        if (h == 0xE0) {
-            uint32_t dat;
-            Type data;
-            memory.get(registr[typeAddress - 0xE0] + 1, dat);
-            uint32_t address = dat + registr[typeAddress - 0xE0] + 5;
-
-            if (finalOperation) {
-                registr[typeAddress - 0xE0] += sizeof(dat) + 1;
-            }
-            return address;
-        }
-
-        if (h == 0xB0) {
-            uint8_t dat;
-            Type data;
-            uint32_t address;
-            memory.get(registr[typeAddress - 0xB0] + 1, dat);
-            memory.get(dat + registr[typeAddress - 0xB0] + 2, address);
-
-            if (finalOperation) {
-                registr[typeAddress - 0xB0] += sizeof(dat) + 1;
-            }
-            return address;
-        }
-
-        if (h == 0xD0) {
-            uint16_t dat;
-            Type data;
-            uint32_t address;
-            memory.get(registr[typeAddress - 0xD0] + 1, dat);
-            memory.get(dat + registr[typeAddress - 0xD0] + 3, address);
-
-            if (finalOperation) {
-                registr[typeAddress - 0xD0] += sizeof(dat) + 1;
-            }
-            return address;
-        }
-
-        if (h == 0xF0) {
-            uint32_t dat;
-            Type data;
-            uint32_t address;
-            memory.get(registr[typeAddress - 0xF0] + 1, dat);
-            memory.get(dat + registr[typeAddress - 0xF0] + 5, address);
-
-            if (finalOperation) {
-                registr[typeAddress - 0xF0] += sizeof(dat) + 1;
-            }
-            return address;
-        }
-
-        descriptionLastCommand.description += " unknown address";
-        return 0;
-    }
 
     template<typename Type>
     void ash() {
@@ -1151,4 +1030,3 @@ public:
 
 
 ::std::ostream &operator<<(::std::ostream &os, const Cprocessor &obj);
-
