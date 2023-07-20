@@ -143,11 +143,11 @@ private:
             uint32_t address;
             Type dat;
             memory.get(registr[15] + 1, offset);
-            memory.get(address = offset + registr[typeAddress - 0xC0], dat);
-            descriptionLastCommand.description += "0xC0 new value : " + int_to_hex(dat) + "\n";
             if (finalOperation) {
                 registr[15] += sizeof(offset) + 1;
             }
+            memory.get(address = offset + registr[typeAddress - 0xC0], dat);
+            descriptionLastCommand.description += "0xC0 new value : " + int_to_hex(dat) + "\n";
 
             return {dat, address};
         }
@@ -513,7 +513,7 @@ public:
     void sub2() {
         Type op1 = get<Type>(registr[15]);
         Type op2 = get<Type>(registr[15], false);
-        set(registr[15], (Type) (sub(op1, op2)));
+        set(registr[15], (Type) (sub(op2, op1)));
     }
 
     template<typename Type>
@@ -661,14 +661,15 @@ public:
         flag.C = c;
 
         set(registr[15], op3value);
+
         typedef typename std::make_signed<Type>::type T;
         if (((T) op2 >= 0) && ((T) op3value <= (T) op1)) {
-            brbw<Type>();
+            brbw<uint16_t>();
         }
         else if (((T) op2 < 0) && ((T) op3value >= (T) op1)) {
-            brbw<Type>();
+            brbw<uint16_t>();
         }else {
-            registr[15] += sizeof(Type);
+            registr[15] += sizeof(uint16_t);
         }
     }
 
@@ -703,13 +704,15 @@ private:
     template<typename Type>
     void jsb() {
         registr[14] -= 4;
-        set(registr[14], registr[15]);
-        registr[15] = get<Type>(registr[15]);
+        auto addr = get_ValAddr<Type>(registr[15]);
+        memory.set(registr[14], registr[15]);
+        registr[15] = addr.second;
     }
 
     template<typename Type>
     void rsb() {
-        registr[15] = get<Type>(registr[14]);
+        memory.get(registr[14], registr[15]);
+        registr[14] += 4;
     }
 
 
@@ -1013,15 +1016,94 @@ public:
             case 0x14:
                 descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
                 if (flag.Z || (flag.N ^ flag.V) == 0) {
-                    uint32_t op1 = getPhysicalAddress<uint32_t>(registr[15]);
-                    registr[15] = op1;
+                    brbw<uint8_t>();
                 } else {
                     registr[15] += 1;
                 }
                 break;
+            case 0x15:
+                descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
+                if (flag.Z || (flag.N ^ flag.V) == 1) {
+                    brbw<uint8_t>();
+                } else {
+                    registr[15] += 1;
+                }
+                break;
+            case 0x18:
+                descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
+                if ((flag.N ^ flag.V) == 0) {
+                    brbw<uint8_t>();
+                } else {
+                    registr[15] += 1;
+                }
+                break;
+            case 0x19:
+                descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
+                if ((flag.N ^ flag.V) == 1) {
+                    brbw<uint8_t>();
+                } else {
+                    registr[15] += 1;
+                }
+                break;
+            case 0x1A:
+                descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
+                if ((flag.C || flag.Z) == 0) {
+                    brbw<uint8_t>();
+                } else {
+                    registr[15] += 1;
+                }
+                break;
+            case 0x1B:
+                descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
+                if ((flag.C || flag.Z) == 1) {
+                    brbw<uint8_t>();
+                } else {
+                    registr[15] += 1;
+                }
+                break;
+            case 0x1C:
+                descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
+                if (flag.V == 0) {
+                    brbw<uint8_t>();
+                } else {
+                    registr[15] += 1;
+                }
+                break;
+            case 0x1D:
+                descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
+                if (flag.V == 1) {
+                    brbw<uint8_t>();
+                } else {
+                    registr[15] += 1;
+                }
+                break;
+            case 0x1E:
+                descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
+                if (flag.C == 0) {
+                    brbw<uint8_t>();
+                } else {
+                    registr[15] += 1;
+                }
+                break;
+            case 0x1F:
+                descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
+                if (flag.C == 1) {
+                    brbw<uint8_t>();
+                } else {
+                    registr[15] += 1;
+                }
+                break;
+            case 0x9D:
+                descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
+                acb<uint8_t>();
+                break;
             case 0x3D:
                 descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
                 acb<uint16_t>();
+                break;
+            case 0xF1:
+                descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
+                acb<uint32_t>();
                 break;
             default:
                 descriptionLastCommand.description +=

@@ -1,0 +1,57 @@
+[Processor settings]
+Memory size=2048
+Max commands before interruption=1048576
+Generate messages=1
+[Registers]
+R1=00000019
+R2=00000004
+R5=00000002
+R6=00000001
+R7=00000005
+RA=000000F5
+RC=00000001
+RD=00000004
+RE=00000400
+RF=00000060
+[Memory]
+0x00000000=19 00 00 00 04 00 00 00 00 00 00 00 00 00 00 00 
+0x00000060=F1 55 5C 56 5A 00 C2 52 51 16 C0 F0 00 D1 51 50 
+0x00000070=D6 53 D1 53 57 13 C9 11 F0 00 00 00 00 00 00 00 
+0x000000C0=78 5D 52 52 11 9A 00 00 00 00 00 00 00 00 00 00 
+0x000000F0=D1 51 50 18 4B 78 5C 51 51 C0 52 51 78 5C 58 58 
+0x00000100=C0 50 58 05 00 00 00 00 00 00 00 00 00 00 00 00 
+0x00000110=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 05 
+0x00000140=78 5C 51 51 C2 52 51 78 5C 58 58 C0 5C 58 05 00 
+[Variable 0]
+Name=Делимое
+VarType=2
+IsReg=1
+Address=00000001
+Base=3
+[Variable 1]
+Name=Делитель
+VarType=2
+IsReg=1
+Address=00000002
+Base=3
+[Windows]
+MemoryEditor.Opened=1
+MemoryEditor.Left=41
+MemoryEditor.Top=96
+MemoryEditor.Width=600
+MemoryEditor.Height=475
+RegsEditor.Opened=1
+RegsEditor.Left=967
+RegsEditor.Top=81
+RegsEditor.Width=263
+RegsEditor.Height=308
+MsgsEditor.Opened=1
+MsgsForm.Left=1122
+MsgsForm.Top=615
+MsgsForm.Width=600
+MsgsForm.Height=300
+VarsEditor.Opened=1
+VarsWin.Left=974
+VarsWin.Top=426
+VarsWin.Width=545
+VarsWin.Height=300
