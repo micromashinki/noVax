@@ -4,7 +4,7 @@
 Cprocessor cp;
 MemPanel* mempanel;
 RegPanel* regpanel;
-
+Okno* frame;
 MsgPanel* msgpanel;
 
 enum {
@@ -17,7 +17,7 @@ enum {
 };
 
 bool InitClass::OnInit() {
-    Okno* frame = new Okno("VAX-22", wxSize(1089, 700));
+    frame = new Okno("VAX-22", wxSize(1089, 700));
     frame->Show(true);
 	return true;
 }
@@ -37,7 +37,8 @@ Okno::Okno(const wxString& str, const wxSize& s) : wxFrame (NULL, wxID_ANY, str,
     mempanel->Create(this, wxID_ANY, wxPoint(0, 0), wxSize(mempanel->GetWidth(), mempanel->GetHeight()));
     mempanel->setSurface();
 
-    regpanel = new RegPanel(wxSize((GetWidth() - GetWidth() / 1.5) - 26, GetHeight() - 250 ));
+    regpanel = new RegPanel(wxSize((GetWidth() - GetWidth() / 1.5) - 26, GetHeight() - 250));
+    regpanel->setCallbackFunc(std::bind(&changeRF));
     regpanel->Create(this, wxID_ANY, wxPoint((GetWidth() / 1.5) + 8, 0), wxSize(regpanel->GetWidth(), regpanel->GetHeight()));
     regpanel->setSurface();
 
@@ -86,7 +87,8 @@ void Okno::setDark(wxCommandEvent& e) {
         mempanel->setTheme(LINES_AND_LABELS_DEFAULT, CELLS_DEFAULT, LINES_AND_LABELS_DEFAULT, TEXT_LABEL_DEFAULT, TEXT_DEFAULT);
        regpanel->setTheme(PANEL_DEFAULT, LINES_AND_LABELS_DEFAULT, CELLS_DEFAULT, LINES_AND_LABELS_DEFAULT, TEXT_LABEL_DEFAULT, LINES_AND_LABELS_DEFAULT, TEXT_DEFAULT);
        msgpanel->setTheme(PANEL_DEFAULT, TEXT_DEFAULT);
-    }Refresh();
+    }
+    Refresh();
 }
 
 void Okno::showAbout(wxCommandEvent& e) {
@@ -119,7 +121,9 @@ void Okno::makeStep(wxCommandEvent& e) {
     for (int i = 0; i < 16; i++) {
         regpanel->setValue(i, int_to_hex(sasha_i_lesha_uebani[i]));
     }
+    mempanel->setRFCell(sasha_i_lesha_uebani[15]);
     msgpanel->setMessage(desc);
+    Refresh();
 }
 
 void Okno::executeProgram(wxCommandEvent& e) {
@@ -131,7 +135,7 @@ void Okno::executeProgram(wxCommandEvent& e) {
         wxMessageBox("Не работает!\nКто виноват?");
     }
     std::string desc;
-    uint16_t count = 1;
+    uint32_t last_val;
     for(Cprocessor::SDescriptionLastCommand tmp : tmp1){
         std::vector<uint32_t> cells = tmp.changeCell;
         desc += tmp.description;
@@ -145,8 +149,11 @@ void Okno::executeProgram(wxCommandEvent& e) {
         for (int i = 0; i < 16; i++) {
             regpanel->setValue(i, int_to_hex(poshel_nakhuy_ueban[i]));
         }
+        last_val = poshel_nakhuy_ueban[15];
     }
+    mempanel->setRFCell(last_val);
     msgpanel->setMessage(desc);
+    Refresh();
 }
 
 void Okno::openFile(wxCommandEvent& e) {
@@ -161,6 +168,8 @@ void Okno::openFile(wxCommandEvent& e) {
     for (int i = 0; i < 16; i++) {
         regpanel->setValue(i, int_to_hex(fedya_ueban[i]));
     }
+    mempanel->setRFCell(fedya_ueban[15]);
+    Refresh();
 }
 
 void Okno::saveFile(wxCommandEvent& e) {
@@ -168,6 +177,12 @@ void Okno::saveFile(wxCommandEvent& e) {
     if (fd->ShowModal() == wxID_CANCEL) return;
     cp.save(fd->GetPath().ToStdString()); //hui znaet, rabotaet ili net
 }
+
+void changeRF(){
+    mempanel->setRFCell(cp.getRegister()[15]);
+    frame->Refresh();
+}
+
 
 wxBEGIN_EVENT_TABLE(Okno, wxFrame)
     EVT_MENU(ID_Step, Okno::makeStep)
