@@ -3,6 +3,10 @@
 
 RegPanel::RegPanel(const wxSize& size) : wxPanel() {this->size = size;}
 
+void RegPanel::setCallbackFunc(std::function<void()> cb){
+    callback = cb;
+}
+
 void RegPanel::setSurface() {
 
      table_panel = new wxPanel(this, wxID_ANY, wxPoint(0, 0), wxSize(180, 600));
@@ -21,9 +25,6 @@ void RegPanel::setSurface() {
     wxColor lines = wxColor(122, 189, 222);
     wxColor cells = wxColor(230, 230, 250);
     wxColor white = wxColor(255, 255, 255);
-   
-    
-    
     
 
     table_panel->SetBackgroundColour(back);  // night theme 15, 0, 41
@@ -154,7 +155,7 @@ void RegPanel::checkValue(wxGridEvent& e) {
         else {
             sec_col->SetCellValue(k, j, wxString(str));
             cp.setRegisterCell(k + 8, std::stoul(str.ToStdString(), 0, 16));
-            
+            if (k == 7) callback();
         }
     }
    

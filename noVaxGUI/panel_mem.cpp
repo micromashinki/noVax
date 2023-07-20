@@ -62,6 +62,7 @@ void MemPanel::setSurface() {
             }
         }
     }
+    setRFCell(0);
 }
 
 int MemPanel::GetWidth() { return size.GetWidth(); }
@@ -132,6 +133,54 @@ void MemPanel::setTheme(const wxColour& label, const wxColour& cell, const wxCol
         }
     }
     table->SetGridLineColour(grid);
+    dark = !dark;
+    setRFCell();
+}
+
+
+void MemPanel::setRFCell(uint32_t coord){
+    wxColour RFbg;
+    wxColour RFText;
+    wxColour Text_usual;
+    wxColour bg_usual;
+    if (!dark){
+        RFbg = LINES_AND_LABELS_DEFAULT;
+        RFText = TEXT_LABEL_DEFAULT;
+        Text_usual = TEXT_DEFAULT;
+        bg_usual = CELLS_DEFAULT;
+    }
+    else {
+        RFbg = LINES_AND_LABELS_DEFAULT;
+        RFText = SO_DARK;
+        Text_usual = LINES_AND_LABELS_DEFAULT;
+        bg_usual = SO_DARK;
+    }
+    table->SetCellBackgroundColour(RF_coord/16, RF_coord%16, bg_usual);
+    table->SetCellTextColour(RF_coord/16, RF_coord%16, Text_usual);
+    RF_coord = coord;
+    table->SetCellBackgroundColour(RF_coord/16, RF_coord%16, RFbg);
+    table->SetCellTextColour(RF_coord/16, RF_coord%16, RFText);
+}
+
+void MemPanel::setRFCell(){
+    wxColour RFbg;
+    wxColour RFText;
+    wxColour Text_usual;
+    wxColour bg_usual;
+    if (!dark){
+        RFbg = LINES_AND_LABELS_DEFAULT;
+        RFText = TEXT_LABEL_DEFAULT;
+        Text_usual = TEXT_DEFAULT;
+        bg_usual = CELLS_DEFAULT;
+    }
+    else {
+        RFbg = LINES_AND_LABELS_DEFAULT;
+        RFText = SO_DARK;
+        Text_usual = LINES_AND_LABELS_DEFAULT;
+        bg_usual = SO_DARK;
+    }
+    table->SetCellBackgroundColour(RF_coord/16, RF_coord%16, RFbg);
+    table->SetCellTextColour(RF_coord/16, RF_coord%16, RFText);
 }
 
 

@@ -11,6 +11,7 @@ public:
 	void denyResizeRow(wxGridSizeEvent&);
 	void setTheme(const wxColour& back, const wxColour& label, const wxColour& cell, const wxColour& grid, const wxColour& text, const wxColour& labeck, const wxColour& texl);
 	void setValue(int i, const std::string& str);
+	void setCallbackFunc(std::function<void()>);
 private:
 	wxSize size;
 	wxGrid* first_col = NULL;
@@ -29,5 +30,6 @@ private:
 	wxPanel* separation_panel6;
 	wxPanel* separation_panel7;
 	wxPanel* separation_panel8;
+	std::function<void()> callback = nullptr;
 	wxDECLARE_EVENT_TABLE();
 };

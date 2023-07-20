@@ -5,6 +5,8 @@ extern MemPanel* mempanel;
 extern RegPanel* regpanel;
 extern MsgPanel* msgpanel;
 
+void changeRF();
+
 class InitClass : public wxApp {
 public:
 	virtual bool OnInit();
