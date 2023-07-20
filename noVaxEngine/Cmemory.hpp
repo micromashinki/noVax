@@ -32,7 +32,7 @@ public:
     }
 
 
-	void get(uint32_t index, uint8_t& dat) { dat = memory[index]; return; };
+	void get(uint32_t index, uint8_t& dat) { dat = memory[index]; };
 	void get(uint32_t index, uint16_t& dat) {
 		dat = memory[index];
 		dat = dat << 8;
@@ -49,9 +49,26 @@ public:
 		dat = dat << 8;
 		dat += memory[index + 3];
 		dat = ntohl(dat);
-
-		return;
 	};
+
+    void get(uint32_t index, int64_t& dat) {
+        dat = memory[index];
+        dat = dat << 8;
+        dat += memory[index + 1];
+        dat = dat << 8;
+        dat += memory[index + 2];
+        dat = dat << 8;
+        dat += memory[index + 3];
+        dat = dat << 8;
+        dat += memory[index + 4];
+        dat = dat << 8;
+        dat += memory[index + 5];
+        dat = dat << 8;
+        dat += memory[index + 6];
+        dat = dat << 8;
+        dat += memory[index + 7];
+        dat = ntohl(dat);
+   };
 
 
 	void set(uint32_t index, const uint8_t dat) { memory[index] = dat; };

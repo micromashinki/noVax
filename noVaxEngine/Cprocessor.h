@@ -383,6 +383,10 @@ public:
 		bool carryToSign = ((op1 ^ op2 ^ (Type)result) & sMask) != 0; // carry to sign bit
 		flag.V = flag.C != carryToSign;
 		//		bool flagV = flag.C != flag.N;
+        /*std::cout << std::hex << op1 << "\n";
+        std::cout << std::hex << op2 << "\n";
+        std::cout << std::hex << result << "\n";
+        std::cout << flag.N << flag.Z << flag.V << flag.C;*/
 		return result;
 	}
 
@@ -411,7 +415,7 @@ public:
 	void sub3() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15]);
-		set(registr[15], (Type)(sub(op1, op2)));
+		set(registr[15], (Type)(sub(op2, op1)));
 	}
 
 	template<typename Type>
@@ -463,9 +467,11 @@ public:
 		set(registr[15], (Type)(~op1));
 
 		flag.V = 0;
-		flag.Z = (~op1) == 0 ? 0 : 1;
-		flag.N = ((int64_t)~op1) < 0 ? 1 : 0;
-
+		flag.Z = (~op1) == 0 ? 1 : 0;
+        int nBit = (sizeof(Type) * 8);// carry bit mask
+        Type sMask = ((Type)1 << (nBit - 1));     // sign bit mask
+        flag.N = ((~op1) & sMask) != 0;
+//        std::cout << flag.N << flag.Z << flag.V << flag.C;
 	}
 
 	template<typename Type>
@@ -490,10 +496,14 @@ public:
 	void bic() {
 		Type op1 = get<Type>(registr[15]);
 		Type op2 = get<Type>(registr[15], false);
-		set(registr[15], (Type)((~op2) & op1));
+		set(registr[15], (Type)((~op1) & op2));
+//        std::cout << std::hex << ((~op1) & op1);
 		flag.V = 0;
-		flag.Z = ((~op2) & op1) == 0 ? 1 : 0;
-		flag.N = ((int64_t)(~op2) & op1) < 0 ? 1 : 0;
+		flag.Z = ((~op2) & op1) == 0;
+        int nBit = (sizeof(Type) * 8);// carry bit mask
+        Type sMask = ((Type)1 << (nBit - 1));     // sign bit mask
+        flag.N = ((~op1) & sMask) != 0;
+//        std::cout << flag.N << flag.Z << flag.V << flag.C;
 	}
 
 	template<typename Type>
@@ -521,8 +531,29 @@ public:
 	void brbw() {
 		Type op1;
 		memory.get(registr[15], op1);
-		registr[15] += op1 + sizeof(Type);
+        typedef typename std::make_signed<Type>::type T;
+		registr[15] += (T)op1 + sizeof(Type);
 	}
+
+    template<typename Type>
+    void acb() {
+        Type op1 = get<Type>(registr[15]);
+        Type op2 = get<Type>(registr[15]);
+        Type op3 = get<Type>(registr[15],false);
+        auto op3value = (Type)add(op2, op3);
+        set(registr[15], op3value);
+        std::cout << std::hex << op1 << "\n";
+        std::cout << std::hex << op2 << "\n";
+        std::cout << std::hex << op3value<< "\n";
+        typedef typename std::make_signed<Type>::type T;
+        if (((T)op2 >= 0) && ((T)op3value <= (T)op1)) {
+            std::cout << "ready to jump";
+            brbw<Type>();
+        } else if (((T)op2 < 0) && ((T)op3value >= (T)op1)) {
+            std::cout << "ready to jump1";
+            brbw<Type>();
+        }
+    }
 private:
 	// говно решение, переделать 
 	// быстрый фикс для презентации 
@@ -668,8 +699,8 @@ private:
 		
 		flag.V = tmp >> (sizeof(Type) * 8 + 1);
 		flag.C = 0;
-		flag.Z = op1 ^ op2 == 0 ? 1 : 0;;
-		flag.N = ((int64_t)op1 ^ op2) < 0 ? 1 : 0;
+		flag.Z = tmp == 0;
+		flag.N = tmp < 0;
 	}
 
 	template<typename Type>
@@ -689,8 +720,6 @@ private:
 	void rsb() {
 		registr[15] = get<Type>(registr[14]);
 	}
-
-
 
 
 public:
@@ -975,6 +1004,24 @@ public:
 			descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
 			break;
 
+        case 0x12:
+            descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
+            if (flag.Z == 0) {
+                brbw<uint8_t>();
+            }
+            else {
+                registr[15] += 1;
+            }
+            break;
+        case 0x13:
+            descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
+            if (flag.Z == 1) {
+                brbw<uint8_t>();
+            }
+            else {
+                registr[15] += 1;
+            }
+            break;
 		case 0x14:
 			descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
 			if (flag.Z || (flag.N ^ flag.V) == 0) {
@@ -985,9 +1032,14 @@ public:
 				registr[15] += 1;
 			}
 			break;
+        case 0x3D:
+            descriptionLastCommand.description += int_to_hex(mackCommand) + '\n';
+            acb<uint16_t>();
+            break;
 		default:
 			descriptionLastCommand.description += std::string(" unknown command: ") + int_to_hex(mackCommand) + '\n';
 		}
+
 
 		return descriptionLastCommand;
 	}
@@ -1001,6 +1053,7 @@ public:
             std::cout << desc.description << std::endl;
             if (desc.description == "HALT") break;
         }
+        std::cout << history.size();
 		return history;
     }
 
