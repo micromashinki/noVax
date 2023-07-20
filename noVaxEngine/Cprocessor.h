@@ -171,12 +171,13 @@ private:
             Type data;
             uint32_t address;
             memory.get(registr[15] + 1, offset);
-            memory.get(offset + registr[typeAddress - 0xB0], address);
-            memory.get(address, data);
-            descriptionLastCommand.description += "0xB0 new value : " + int_to_hex(data) + "\n";
             if (finalOperation) {
                 registr[15] += sizeof(offset) + 1;
             }
+            memory.get(offset + registr[typeAddress - 0xB0] , address);
+            memory.get(address, data);
+            descriptionLastCommand.description += "0xB0 new value : " + int_to_hex(data) +" from: "+ int_to_hex(address) +"\n";
+
             return {data,address};
         }
 
@@ -185,12 +186,12 @@ private:
             Type data;
             uint32_t address;
             memory.get(registr[15] + 1, offset);
-            memory.get(offset + registr[typeAddress - 0xD0], address);
-            memory.get(address, data);
-            descriptionLastCommand.description += "0xD0 new value : " + int_to_hex(data) + "\n";
             if (finalOperation) {
                 registr[15] += sizeof(offset) + 1;
             }
+            memory.get(offset + registr[typeAddress - 0xD0], address);
+            memory.get(address, data);
+            descriptionLastCommand.description += "DX value : " + int_to_hex(data) +" from: "+ int_to_hex(address) +"\n";
             return {data,address};
         }
 
@@ -199,12 +200,12 @@ private:
             Type data;
             uint32_t address;
             memory.get(registr[15] + 1, offset);
-            memory.get(offset + registr[typeAddress - 0xF0], address);
-            memory.get(address, data);
-            descriptionLastCommand.description += "0xF0 new value : " + int_to_hex(data) + "\n";
             if (finalOperation) {
                 registr[15] += sizeof(offset) + 1;
             }
+            memory.get(offset + registr[typeAddress - 0xF0], address);
+            memory.get(address, data);
+            descriptionLastCommand.description += "0xF0 value : " + int_to_hex(data) + "\n";
 
             return {data,address};
         }
@@ -217,12 +218,14 @@ private:
             if (finalOperation) {
                 registr[15] += 1;
             }
-            uint32_t iarr =registr[typeAddress - 0x40];
-            std::pair<Type,uint32_t > base =  get_ValAddr <uint32_t>(code_index +1, finalOperation );
+            uint32_t array_index = registr[typeAddress - 0x40];
+            std::cout << "array index: " << std::hex << array_index << std::endl;
+            std::pair<Type,uint32_t > base = get_ValAddr<uint32_t>(code_index + 1, finalOperation);
 
-
-            memory.get(address = (base.second+ iarr *sizeof(Type)), data);
-            descriptionLastCommand.description += "0x40 new value : " + int_to_hex(data) + "\n";
+            hexlog(base.second);
+            hexlog(base.first);
+            memory.get(address = (base.second + array_index * sizeof(Type)), data);
+            descriptionLastCommand.description += "4X value : " + int_to_hex(data) + "\n";
             return {data,address};
         }
 
@@ -237,7 +240,14 @@ private:
         return {0,0xffffffff};
     }
 
+    void log(std::string a) {
+        std::cout << a << std::endl;
+    }
 
+    template<typename Type>
+    void hexlog(Type a) {
+        std::cout << std::hex << a << std::endl;
+    }
 
     template<typename Type>
     Type get(const uint32_t &index, bool finalOperation = true){
@@ -637,18 +647,28 @@ public:
         Type op1 = get<Type>(registr[15]);
         Type op2 = get<Type>(registr[15]);
         Type op3 = get<Type>(registr[15], false);
+
+        auto n = flag.N;
+        auto z = flag.Z;
+        auto v = flag.V;
+        auto c = flag.C;
+
         auto op3value = (Type) add(op2, op3);
+
+        flag.N = n;
+        flag.Z = z;
+        flag.V = v;
+        flag.C = c;
+
         set(registr[15], op3value);
-        std::cout << std::hex << op1 << "\n";
-        std::cout << std::hex << op2 << "\n";
-        std::cout << std::hex << op3value << "\n";
         typedef typename std::make_signed<Type>::type T;
         if (((T) op2 >= 0) && ((T) op3value <= (T) op1)) {
-            std::cout << "ready to jump";
             brbw<Type>();
-        } else if (((T) op2 < 0) && ((T) op3value >= (T) op1)) {
-            std::cout << "ready to jump1";
+        }
+        else if (((T) op2 < 0) && ((T) op3value >= (T) op1)) {
             brbw<Type>();
+        }else {
+            registr[15] += sizeof(Type);
         }
     }
 

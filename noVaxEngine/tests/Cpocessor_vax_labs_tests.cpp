@@ -39,7 +39,7 @@ TEST(Cprocessor, lab3_part_1) {
 
     EXPECT_TRUE(proc1 == proc2);
 }
-/*
+
 TEST(Cprocessor, lab3_part_2) {
     Cprocessor proc1;
     proc1.load(PATH_Cprocessor_save_load "lab3_part_2_default.v11");
@@ -49,4 +49,4 @@ TEST(Cprocessor, lab3_part_2) {
     proc2.load(PATH_Cprocessor_save_load"lab3_part_2_after.v11");
 
     EXPECT_TRUE(proc1 == proc2);
-}*/
+}
