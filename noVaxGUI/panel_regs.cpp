@@ -183,6 +183,7 @@ void RegPanel::setValue(int i, const std::string& str) {
         tmp.assign(8-str.length(), '0');
         tmp = tmp+str;
     }
+    else tmp = str;
 
     if( i > 7) sec_col->SetCellValue(i-8, 1, tmp);
     else first_col->SetCellValue(i, 0, tmp);
