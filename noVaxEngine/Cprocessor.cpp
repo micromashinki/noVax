@@ -6,6 +6,7 @@
 #include "Cprocessor.h"
 
 void Cprocessor::load(const std::string& path) {
+    clean();
     inipp::Ini<char> ini;
 
     // read ini file
