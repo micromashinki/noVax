@@ -21,6 +21,12 @@ class Cprocessor {
 
 public:
 
+    void clean() {
+        flag = Cflags();
+        memory = Cmemory();
+        registr = std::vector<uint32_t>(16, 0);
+    }
+
     Cprocessor() : registr(16, 0) {
     }
 
